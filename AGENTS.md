@@ -51,6 +51,7 @@ k8s: Reserved for future use, not used at this stage
 - Coding (commit messages, branch naming, PR rules, code review): [`docs/conventions/coding.md`](docs/conventions/coding.md)
 - Testing (test taxonomy, per-package strategy, contract testing, CI pipeline): [`docs/conventions/testing.md`](docs/conventions/testing.md)
 - Code Review Workflow (Codex + Human review handling): [`docs/conventions/code-review-workflow.md`](docs/conventions/code-review-workflow.md)
+- Deployment Workflow (post-merge compose flow): [`docs/conventions/deployment.md`](docs/conventions/deployment.md)
 
 ## Decisions & Reference
 - ADR 0001 — Service Boundaries: [`docs/adr/0001-boundaries.md`](docs/adr/0001-boundaries.md)
@@ -101,11 +102,11 @@ k8s: Reserved for future use, not used at this stage
 
 # COMMANDS
 - Local bootstrap: `bash scripts/bootstrap.sh`
-- Run backend: `uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`
-- Run frontend: `npm run dev --workspace packages/frontend`
+- Run backend: `uvicorn app.main:app --reload --host 0.0.0.0 --port 8001`
+- Run frontend: `npm run dev --workspace packages/frontend -- --port 8002`
 - Extension dev build: `npm run dev --workspace packages/chrome-extension`
-- Start all containers (dev): `docker compose -f docker/compose.yml -f docker/compose.override.yml up --build`
-- Stop all containers: `docker compose -f docker/compose.yml -f docker/compose.override.yml down`
+- Start all containers (dev): `bash scripts/run.sh`
+- Stop all containers: `bash scripts/remove.sh`
 - Apply DB migrations: `bash scripts/migrate.sh`
 - Quality check: `bash scripts/check.sh`
 
