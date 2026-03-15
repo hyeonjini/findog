@@ -50,6 +50,7 @@ k8s: Reserved for future use, not used at this stage
 ## Conventions (cross-package)
 - Coding (commit messages, branch naming, PR rules, code review): [`docs/conventions/coding.md`](docs/conventions/coding.md)
 - Testing (test taxonomy, per-package strategy, contract testing, CI pipeline): [`docs/conventions/testing.md`](docs/conventions/testing.md)
+- Code Review Workflow (Codex + Human review handling): [`docs/conventions/code-review-workflow.md`](docs/conventions/code-review-workflow.md)
 
 ## Decisions & Reference
 - ADR 0001 — Service Boundaries: [`docs/adr/0001-boundaries.md`](docs/adr/0001-boundaries.md)
