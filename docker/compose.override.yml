@@ -2,9 +2,9 @@ services:
   backend:
     environment:
       APP_ENV: development
-      DATABASE_URL: postgresql://findog:findog@db:5432/findog
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT:-5432}/${POSTGRES_DB}
 
   frontend:
     environment:
       NODE_ENV: development
-      NEXT_PUBLIC_API_BASE_URL: http://localhost:8001
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:${BACKEND_PORT:-8001}
