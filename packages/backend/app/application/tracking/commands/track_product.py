@@ -24,13 +24,14 @@ class TrackProductInteractor:
         source_price_amount: Decimal | None = None,
         source_currency: str | None = None,
     ) -> TrackedProduct:
-        existing_product = self._repo.find_by_user_and_url(user_id, source_url)
+        normalized_url = source_url.strip()
+        existing_product = self._repo.find_by_user_and_url(user_id, normalized_url)
         if existing_product is not None:
             raise DuplicateTrackedProductError
 
         tracked_product = TrackedProduct.create(
             user_id=user_id,
-            source_url=source_url,
+            source_url=normalized_url,
             source_title=source_title,
             source_platform=source_platform,
             source_image_url=source_image_url,
