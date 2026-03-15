@@ -13,10 +13,11 @@ from sqlmodel import SQLModel, Session, create_engine
 
 from app.infrastructure.persistence.database import get_session
 from app.infrastructure.persistence.models.refresh_token import RefreshTokenTable
+from app.infrastructure.persistence.models.tracked_product import TrackedProductTable
 from app.infrastructure.persistence.models.user import UserTable
 from app.main import app
 
-_ = (UserTable, RefreshTokenTable)
+_ = (UserTable, RefreshTokenTable, TrackedProductTable)
 
 
 @pytest.fixture(name="engine", scope="session")
