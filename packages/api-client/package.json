@@ -1,0 +1,6 @@
+{
+  "name": "@findog/api-client",
+  "private": true,
+  "version": "0.1.0",
+  "types": "src/index.ts"
+}

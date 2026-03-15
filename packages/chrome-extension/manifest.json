@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "FinDog",
+  "version": "0.1.0",
+  "description": "Save shopping products and track prices",
+  "permissions": ["storage", "activeTab", "tabs"],
+  "host_permissions": ["http://localhost:8000/*"],
+  "background": {
+    "service_worker": "src/background/index.js"
+  },
+  "action": {
+    "default_popup": "src/popup/index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/index.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
