@@ -5,6 +5,9 @@ from uuid import uuid4
 
 from fastapi.testclient import TestClient
 from httpx import Response
+from sqlmodel import Session, select
+
+from app.infrastructure.persistence.models.user import UserTable
 
 JsonDict = dict[str, object]
 
@@ -78,6 +81,17 @@ class TestRegisterEndpoint:
         assert second_response.status_code == 409
         assert second_response.json() == {"detail": "Email already exists"}
 
+    def test_register_rejects_password_over_72_utf8_bytes(
+        self,
+        client: TestClient,
+    ) -> None:
+        response = register_user(client, email=make_email(), password="가" * 25)
+
+        assert response.status_code == 422
+        payload = json_dict(response)
+        assert isinstance(payload["detail"], list)
+        assert payload["detail"]
+
 
 class TestLoginEndpoint:
     def test_login_returns_tokens_for_valid_credentials(self, client: TestClient) -> None:
@@ -105,6 +119,39 @@ class TestLoginEndpoint:
         assert wrong_password_response.json() == {"detail": "Invalid credentials"}
         assert unknown_user_response.status_code == 401
         assert unknown_user_response.json() == {"detail": "Invalid credentials"}
+
+    def test_login_rejects_inactive_user(
+        self,
+        client: TestClient,
+        session: Session,
+    ) -> None:
+        email = make_email()
+        register_response = register_user(client, email=email)
+        user = session.exec(select(UserTable).where(UserTable.email == email)).first()
+        assert user is not None
+        user.is_active = False
+        session.add(user)
+        session.commit()
+
+        login_response = login_user(client, email=email)
+
+        assert register_response.status_code == 201
+        assert login_response.status_code == 401
+        assert login_response.json() == {"detail": "Invalid credentials"}
+
+    def test_login_rejects_password_over_72_utf8_bytes(
+        self,
+        client: TestClient,
+    ) -> None:
+        email = make_email()
+        valid_password = "p" * 72
+        register_response = register_user(client, email=email, password=valid_password)
+
+        login_response = login_user(client, email=email, password=valid_password + "suffix")
+
+        assert register_response.status_code == 201
+        assert login_response.status_code == 401
+        assert login_response.json() == {"detail": "Invalid credentials"}
 
 
 class TestRefreshAndLogoutEndpoints:

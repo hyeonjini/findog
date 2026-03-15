@@ -95,7 +95,10 @@ class TestRegisterUserInteractor:
             password_hasher=password_hasher,
         )
 
-        with pytest.raises(ValueError, match="between 8 and 72 characters"):
+        with pytest.raises(
+            ValueError,
+            match="at least 8 characters and at most 72 bytes",
+        ):
             _ = interactor.execute(email="user@example.com", password="short")
 
         assert user_repository.find_by_email_calls == []
@@ -109,7 +112,10 @@ class TestRegisterUserInteractor:
             password_hasher=password_hasher,
         )
 
-        with pytest.raises(ValueError, match="between 8 and 72 characters"):
+        with pytest.raises(
+            ValueError,
+            match="at least 8 characters and at most 72 bytes",
+        ):
             _ = interactor.execute(email="user@example.com", password="p" * 73)
 
         assert user_repository.find_by_email_calls == []
@@ -131,3 +137,20 @@ class TestRegisterUserInteractor:
         assert user.email == "mixedcase@example.com"
         assert user_repository.find_by_email_calls == ["mixedcase@example.com"]
         assert user_repository.saved_users[0].email == "mixedcase@example.com"
+
+    def test_rejects_password_over_72_utf8_bytes(self) -> None:
+        user_repository = SpyUserRepository()
+        password_hasher = SpyPasswordHasher()
+        interactor = RegisterUserInteractor(
+            user_repository=user_repository,
+            password_hasher=password_hasher,
+        )
+
+        with pytest.raises(
+            ValueError,
+            match="at least 8 characters and at most 72 bytes",
+        ):
+            _ = interactor.execute(email="user@example.com", password="가" * 25)
+
+        assert user_repository.find_by_email_calls == []
+        assert password_hasher.hash_calls == []

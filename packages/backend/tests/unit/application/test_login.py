@@ -182,6 +182,59 @@ class TestLoginInteractor:
         assert token_service.refresh_token_call_count == 0
         assert refresh_token_repository.saved_tokens == []
 
+    def test_rejects_password_over_72_utf8_bytes(self) -> None:
+        user = make_user(email="user@example.com")
+        user_repository = SpyUserRepository()
+        user_repository.users_by_email[user.email] = user
+        password_hasher = SpyPasswordHasher(verify_result=True)
+        token_service = SpyTokenService()
+        refresh_token_repository = SpyRefreshTokenRepository()
+        interactor = LoginInteractor(
+            user_repository=user_repository,
+            password_hasher=password_hasher,
+            token_service=token_service,
+            refresh_token_repo=refresh_token_repository,
+        )
+
+        with pytest.raises(InvalidCredentialsError):
+            _ = interactor.execute(email="user@example.com", password="가" * 25)
+
+        assert user_repository.find_by_email_calls == ["user@example.com"]
+        assert password_hasher.verify_calls == []
+        assert token_service.access_token_calls == []
+        assert token_service.refresh_token_call_count == 0
+        assert refresh_token_repository.saved_tokens == []
+
+    def test_rejects_inactive_user_even_with_valid_password(self) -> None:
+        user = make_user(email="user@example.com")
+        inactive_user = User(
+            id=user.id,
+            email=user.email,
+            hashed_password=user.hashed_password,
+            is_active=False,
+            created_at=user.created_at,
+        )
+        user_repository = SpyUserRepository()
+        user_repository.users_by_email[inactive_user.email] = inactive_user
+        password_hasher = SpyPasswordHasher(verify_result=True)
+        token_service = SpyTokenService()
+        refresh_token_repository = SpyRefreshTokenRepository()
+        interactor = LoginInteractor(
+            user_repository=user_repository,
+            password_hasher=password_hasher,
+            token_service=token_service,
+            refresh_token_repo=refresh_token_repository,
+        )
+
+        with pytest.raises(InvalidCredentialsError):
+            _ = interactor.execute(email="user@example.com", password="password123")
+
+        assert user_repository.find_by_email_calls == ["user@example.com"]
+        assert password_hasher.verify_calls == [("password123", inactive_user.hashed_password)]
+        assert token_service.access_token_calls == []
+        assert token_service.refresh_token_call_count == 0
+        assert refresh_token_repository.saved_tokens == []
+
     def test_same_error_for_unknown_email_and_wrong_password(self) -> None:
         unknown_user_interactor = LoginInteractor(
             user_repository=SpyUserRepository(),

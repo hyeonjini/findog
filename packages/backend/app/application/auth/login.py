@@ -38,7 +38,13 @@ class LoginInteractor:
         if user is None:
             raise InvalidCredentialsError
 
+        if len(password.encode("utf-8")) > 72:
+            raise InvalidCredentialsError
+
         if not self._password_hasher.verify(password, user.hashed_password):
+            raise InvalidCredentialsError
+
+        if not user.is_active:
             raise InvalidCredentialsError
 
         access_token = self._token_service.create_access_token(str(user.id))

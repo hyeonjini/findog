@@ -20,8 +20,9 @@ class RegisterUserInteractor:
         self._password_hasher = password_hasher
 
     def execute(self, email: str, password: str) -> User:
-        if len(password) < 8 or len(password) > 72:
-            raise ValueError("Password must be between 8 and 72 characters")
+        password_bytes = len(password.encode("utf-8"))
+        if len(password) < 8 or password_bytes > 72:
+            raise ValueError("Password must be at least 8 characters and at most 72 bytes")
 
         normalized_email = Email(email).value
         existing_user = self._user_repository.find_by_email(normalized_email)
