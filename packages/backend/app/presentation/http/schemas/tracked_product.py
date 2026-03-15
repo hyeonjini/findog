@@ -4,7 +4,7 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from app.domain.tracking.entity import TrackedProduct
 
@@ -22,6 +22,13 @@ class TrackedProductUpdateRequest(BaseModel):
     source_title: str | None = Field(default=None, min_length=1)
     restock_alert_enabled: bool | None = None
     lowest_price_tracking_enabled: bool | None = None
+
+    @field_validator("source_title", mode="before")
+    @classmethod
+    def strip_source_title(cls, v: str | None) -> str | None:
+        if isinstance(v, str):
+            return v.strip()
+        return v
 
 
 class TrackedProductResponse(BaseModel):

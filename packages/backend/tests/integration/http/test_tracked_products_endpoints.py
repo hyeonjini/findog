@@ -267,6 +267,24 @@ class TestTrackedProductsEndpoints:
         assert created_response.status_code == 201
         assert response.status_code == 422
 
+    def test_update_with_whitespace_only_title_returns_422(
+        self,
+        client: TestClient,
+        auth_headers: AuthHeadersFactory,
+    ) -> None:
+        headers = auth_headers(email=make_email())
+        created_response = create_tracked_product(client, headers, suffix="ws-title")
+        tracked_product_id = read_string(json_dict(created_response), "id")
+
+        response = client.patch(
+            f"/api/tracked-products/{tracked_product_id}",
+            headers=headers,
+            json={"source_title": "   "},
+        )
+
+        assert created_response.status_code == 201
+        assert response.status_code == 422
+
     def test_update_nonexistent_returns_404(
         self,
         client: TestClient,
