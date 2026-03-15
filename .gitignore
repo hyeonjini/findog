@@ -33,3 +33,12 @@ test-results/
 
 # Docker
 postgres_data/
+
+# Sisyphus planning artifacts
+.sisyphus/
+
+# Python build artifacts
+*.egg-info/
+
+# npm lockfile (project uses pnpm)
+package-lock.json
