@@ -11,6 +11,8 @@ Services provided:
 *Core features are not yet implemented; they will be powered by LLM in the future, evolved incrementally, and require a well-defined development strategy*
 4) Users can view their saved product list and price trends on the Frontend (price trends are periodically stored in the DB starting from the date the product was added)
 
+**Maturity**: Scaffold — all packages are skeleton only (~41 lines of code). Architecture docs are comprehensive but implementation has not begun. Only `GET /api/health` endpoint exists.
+
 # GENERAL GUIDELINES
 - For new features, always create a new feature branch from the `develop` branch
 - When merged into `develop`, build a Docker image and publish to the development environment using scripts
@@ -78,6 +80,23 @@ k8s: Reserved for future use, not used at this stage
 - Do NOT call backend API directly from Extension content scripts (must go through background service worker)
 - Do NOT modify DB schema manually (all changes must go through `db/migrations/*.sql`)
 - Do NOT implement features before documenting shared policies/rules
+
+# CONVENTIONS (ENFORCED BY CONFIG)
+- `.editorconfig`: UTF-8, LF, indent 2 (JS/TS/YAML/JSON/SQL), indent 4 (Python), trim trailing whitespace (except .md)
+- `tsconfig.base.json`: `strict: true`, `target: ES2022`, `moduleResolution: Bundler`, path alias `@findog/api-client/*`
+- `pyproject.toml`: pytest discovers from `tests/` with `pythonpath = ["."]`
+- `pnpm-workspace.yaml`: JS packages = `frontend`, `chrome-extension`, `api-client` (backend excluded — Python)
+- Package manager: `pnpm@10.0.0` (pinned in root `package.json`)
+
+# TOOLING GAPS (NOT YET CREATED)
+- CI/CD: `.github/workflows/` does not exist (pipeline design documented in `docs/conventions/testing.md`)
+- Dockerfiles: containers use inline build commands in `compose.yml`
+- Linter/formatter configs: `.eslintrc`, `.prettierrc`, `ruff.toml` not created
+- `next.config.*` for frontend, `vite.config.ts` / `manifest.config.ts` (CRXJS) for extension
+- `scripts/export-openapi.sh` referenced in docs but does not exist
+- `scripts/migrate.sh` is a placeholder — no migration runner (Alembic/Flyway) integrated
+- `scripts/bootstrap.sh` uses `npm install` despite `pnpm` being declared package manager
+- Env validation modules (`src/lib/env.ts`, Pydantic Settings) not implemented
 
 # COMMANDS
 - Local bootstrap: `bash scripts/bootstrap.sh`
