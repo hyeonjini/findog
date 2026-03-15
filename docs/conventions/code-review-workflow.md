@@ -88,6 +88,8 @@ Not applicable.
 9. Merge to develop
 ```
 
+Review fixes stay on the original PR branch. Do not open a separate `fix/*` branch just to respond to review feedback unless the user explicitly asks for a separate follow-up PR.
+
 ---
 
 ## 5. Commit Convention for Review Fixes
@@ -104,6 +106,12 @@ fix(backend): address PR review — <brief summary>
 
 If a single review round produces multiple unrelated fixes, prefer one commit per logical change over one giant commit.
 
+Recommended body sentence for review-fix commits:
+
+```markdown
+Reason: address valid PR feedback before merge to develop.
+```
+
 ---
 
 ## 6. Rules
@@ -114,3 +122,4 @@ If a single review round produces multiple unrelated fixes, prefer one commit pe
 4. **Minimize scope creep.** If a review comment reveals a larger issue outside the PR's scope, create a follow-up issue and link it in the reply.
 5. **Re-run verification after every fix push.** Diagnostics, tests, and build must pass after addressing review comments.
 6. **Human reviewer has final authority.** Codex comments inform the review but do not replace human judgment. If a human reviewer disagrees with Codex, the human decision takes precedence.
+7. **User-shared review comments are first-class review input.** If the user pastes a comment or shares a review URL, handle it with the same classify-fix-verify-reply loop.
