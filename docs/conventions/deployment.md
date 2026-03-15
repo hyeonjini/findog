@@ -15,7 +15,7 @@ When `develop` is updated by merge, update local `develop` and rerun the compose
   git pull --ff-only origin develop
   ```
 
-- Rebuild and restart backend/frontend/postgres with the standard post-merge entrypoint:
+- Rebuild and refresh backend/frontend/postgres with the standard post-merge entrypoint:
 
   ```bash
   bash scripts/redeploy.sh
@@ -37,7 +37,7 @@ When `develop` is updated by merge, update local `develop` and rerun the compose
 ## Why this works
 
 - `scripts/run.sh` ensures `.env` exists (created from `.env.example` when missing).
-- `scripts/redeploy.sh` gives one standard post-merge rebuild-and-restart entrypoint.
+- `scripts/redeploy.sh` gives one standard post-merge rebuild-and-refresh entrypoint without deleting local Docker volumes.
 - Compose services use `restart: unless-stopped`, so containers recover automatically unless they are intentionally stopped.
 - `docker compose` runs Postgres init scripts from `db/migrations` on first DB startup.
 - Backend swagger is exposed at `http://localhost:8001/docs`.
@@ -63,4 +63,4 @@ When `develop` is updated by merge, update local `develop` and rerun the compose
 
 - Running `bash scripts/run.sh` without `.env` should create `.env` automatically and still boot services.
 - Running `bash scripts/remove.sh` repeatedly should safely handle an already stopped stack.
-- Running `bash scripts/redeploy.sh` repeatedly should rebuild and restart the stack into the latest local state.
+- Running `bash scripts/redeploy.sh` repeatedly should rebuild and refresh the stack into the latest local state without removing local volumes.

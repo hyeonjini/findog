@@ -15,7 +15,7 @@ Services provided:
 
 # GENERAL GUIDELINES
 - For new features, always create a new feature branch from the `develop` branch
-- When merged into `develop`, build a Docker image and publish to the development environment using scripts
+- When merged into `develop`, refresh the development Docker environment using the scripts in `scripts/`
 
 ## Session-Persistent Delivery Workflow
 Use this workflow in every session, including new sessions, unless the user explicitly requests an exception.
