@@ -114,6 +114,25 @@ class TestTrackedProductsEndpoints:
         assert second_response.status_code == 409
         assert second_response.json() == {"detail": "Tracked product already exists"}
 
+    def test_create_with_invalid_price_fields_returns_422(
+        self,
+        client: TestClient,
+        auth_headers: AuthHeadersFactory,
+    ) -> None:
+        headers = auth_headers(email=make_email())
+
+        response = client.post(
+            "/api/tracked-products",
+            headers=headers,
+            json={
+                "source_url": "https://shop.example.com/products/bad-price",
+                "source_title": "Bad price product",
+                "source_currency": "USD",
+            },
+        )
+
+        assert response.status_code == 422
+
     def test_list_tracked_products_returns_only_own(
         self,
         client: TestClient,
@@ -226,6 +245,27 @@ class TestTrackedProductsEndpoints:
         assert payload["lowest_price_tracking_enabled"] is True
         assert read_string(payload, "source_url") == "https://shop.example.com/products/patch"
         assert read_string(payload, "monitoring_status") == "active"
+        assert read_string(payload, "updated_at") != read_string(
+            json_dict(created_response), "updated_at"
+        )
+
+    def test_update_with_empty_title_returns_422(
+        self,
+        client: TestClient,
+        auth_headers: AuthHeadersFactory,
+    ) -> None:
+        headers = auth_headers(email=make_email())
+        created_response = create_tracked_product(client, headers, suffix="empty-title")
+        tracked_product_id = read_string(json_dict(created_response), "id")
+
+        response = client.patch(
+            f"/api/tracked-products/{tracked_product_id}",
+            headers=headers,
+            json={"source_title": ""},
+        )
+
+        assert created_response.status_code == 201
+        assert response.status_code == 422
 
     def test_update_nonexistent_returns_404(
         self,

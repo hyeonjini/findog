@@ -80,6 +80,7 @@ class TestUpdateTrackedProductInteractor:
         assert updated_product.restock_alert_enabled is True
         assert updated_product.lowest_price_tracking_enabled is True
         assert updated_product.source_url == existing_product.source_url
+        assert updated_product.updated_at > existing_product.updated_at
         assert existing_product.source_title == "Original title"
         assert existing_product.restock_alert_enabled is False
 
