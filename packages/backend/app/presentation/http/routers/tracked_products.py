@@ -60,6 +60,11 @@ def create_tracked_product(
             status_code=status.HTTP_409_CONFLICT,
             detail="Tracked product already exists",
         ) from exc
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
+        ) from exc
 
     return TrackedProductResponse.from_entity(tracked_product)
 

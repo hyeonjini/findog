@@ -19,7 +19,7 @@ class TrackedProductCreateRequest(BaseModel):
 
 
 class TrackedProductUpdateRequest(BaseModel):
-    source_title: str | None = None
+    source_title: str | None = Field(default=None, min_length=1)
     restock_alert_enabled: bool | None = None
     lowest_price_tracking_enabled: bool | None = None
 

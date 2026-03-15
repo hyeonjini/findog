@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from datetime import UTC, datetime
 from uuid import UUID
 
 from app.domain.tracking.entity import TrackedProduct
@@ -26,7 +27,7 @@ class UpdateTrackedProductInteractor:
         if tracked_product is None or tracked_product.user_id != user_id:
             raise TrackedProductNotFoundError
 
-        updates: dict[str, str | bool] = {}
+        updates: dict[str, str | bool | datetime] = {}
         if source_title is not None:
             updates["source_title"] = source_title
         if restock_alert_enabled is not None:
@@ -34,5 +35,6 @@ class UpdateTrackedProductInteractor:
         if lowest_price_tracking_enabled is not None:
             updates["lowest_price_tracking_enabled"] = lowest_price_tracking_enabled
 
+        updates["updated_at"] = datetime.now(UTC)
         updated_product = replace(tracked_product, **updates)
         return self._repo.update(updated_product)
