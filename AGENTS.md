@@ -17,6 +17,17 @@ Services provided:
 - For new features, always create a new feature branch from the `develop` branch
 - When merged into `develop`, build a Docker image and publish to the development environment using scripts
 
+## Session-Persistent Delivery Workflow
+Use this workflow in every session, including new sessions, unless the user explicitly requests an exception.
+
+1. Start from `develop` and create a `feature/*` branch for new feature work.
+2. Implement on that branch and open a PR targeting `develop`.
+3. Keep review follow-up commits on the same PR branch until the PR is merged.
+4. When the user or Codex provides review comments, evaluate each comment, fix valid issues, verify again, and push updates to the same branch.
+5. Reply in the review thread using the repository review convention after each addressed item.
+6. Repeat the review-response-push loop until the PR is merged into `develop`.
+7. After merge into `develop`, refresh the Docker environment immediately so containers reflect the latest code and remain running.
+
 # ARCHITECTURE OVERVIEW
 ## PACKAGE STRUCTURE
 ```
@@ -130,6 +141,7 @@ k8s: Reserved for future use, not used at this stage
 # WORKFLOW
 1) For new features, always create a `feature/*` branch from the `develop` branch.
 2) After feature development, create a PR to the `develop` branch.
-3) Review and address the feedback provided by Codex.
-4) For items requiring fixes, work on a `fix/*` branch.
-5) Merging into `develop` is authorized by the user; upon merge, build a Docker image and publish to the development environment.
+3) Review comments from the user, Codex, or human reviewers must be handled on the same PR branch until merge.
+4) For each valid review item, fix the code, verify again, push, and reply in the review thread using the documented convention.
+5) Repeat the review cycle until the PR is merged into `develop`.
+6) After merge into `develop`, refresh the Docker environment with the scripts in `scripts/` so the latest code is reflected while containers remain running.
