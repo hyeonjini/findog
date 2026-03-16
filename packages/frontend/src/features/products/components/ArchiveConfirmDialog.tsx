@@ -3,13 +3,13 @@
 import { useRouter } from 'next/navigation';
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  Button,
   useToast,
 } from '@findog/design-system';
 import { useArchiveTrackedProductApiTrackedProductsTrackedProductIdArchivePost } from '@findog/api-client/endpoints';
@@ -62,13 +62,14 @@ export function ArchiveConfirmDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
+          <Button
+            type="button"
             onClick={handleArchive}
             disabled={mutation.isPending}
             className="bg-red-600 text-white hover:bg-red-700 focus:ring-red-600"
           >
             {mutation.isPending ? 'Archiving...' : 'Archive'}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
