@@ -1,0 +1,8 @@
+:root {
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --line-height-normal: 1.5;
+}

@@ -1,6 +1,17 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2022",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@findog/api-client": ["../../packages/api-client/src/index"],
+      "@findog/api-client/*": ["../../packages/api-client/src/*"],
+      "@findog/design-system": ["./design-system/index"],
+      "@findog/design-system/*": ["./design-system/*"]
+    },
     "lib": [
       "dom",
       "dom.iterable",
@@ -8,12 +19,10 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
     "noEmit": true,
     "incremental": true,
     "module": "esnext",
     "esModuleInterop": true,
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
