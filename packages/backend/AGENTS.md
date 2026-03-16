@@ -2,7 +2,7 @@
 
 Python 3.12 + FastAPI + Pydantic + SQLModel. Clean Architecture + DDD.
 
-**Status**: Skeleton. Only `GET /api/health` implemented. Layer dirs have placeholder READMEs only.
+**Status**: Implemented. Full auth cycle (register/login/refresh/logout) + tracked-product CRUD (create/update/archive/restore/list/detail). All Clean Architecture layers wired with DI. 14 test files covering unit (domain + application) and integration (HTTP endpoints).
 
 ## LAYER RULES
 
@@ -58,12 +58,25 @@ Use `Annotated[T, Depends(...)]` type aliases. Compose deps. Never instantiate s
 tests/
   unit/domain/           # Pure domain logic (no mocks)
   unit/application/      # UseCase tests (mock ports)
-  integration/api/       # TestClient full cycle
-  integration/persistence/  # Real test DB
-  conftest.py            # engine, session, client fixtures
+  integration/http/      # TestClient full cycle (auth, health, products, users)
+  integration/persistence/  # Real test DB (not yet populated)
+  conftest.py            # engine, session, client, auth_headers fixtures
 ```
 
 Test naming: `test_<expected_behavior>` - describes outcome, not method.
+
+## IMPLEMENTED MODULES
+
+| Domain | Endpoints | Use Cases | Tests |
+|---|---|---|---|
+| `auth` | register, login, refresh, logout | 4 interactors | 2 unit + 1 integration |
+| `tracking` | create, update, archive, restore, list, detail, refresh | 5 interactors (CQRS split) | 4 unit + 1 integration |
+| `user` | `/users/me` | via auth dependency | 1 integration |
+| `health` | `/api/health` | — | 1 integration |
+
+## COMPOSITION ROOT (`app/main.py`)
+
+DI wiring uses `Annotated[Port, Depends(provider)]` aliases. Providers instantiate infrastructure impls from `SessionDep`. Router inclusion uses dynamic import with fallback state tracking.
 
 ## ANTI-PATTERNS
 

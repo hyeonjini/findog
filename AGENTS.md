@@ -11,7 +11,7 @@ Services provided:
 *Core features are not yet implemented; they will be powered by LLM in the future, evolved incrementally, and require a well-defined development strategy*
 4) Users can view their saved product list and price trends on the Frontend (price trends are periodically stored in the DB starting from the date the product was added)
 
-**Maturity**: Scaffold — all packages are skeleton only (~41 lines of code). Architecture docs are comprehensive but implementation has not begun. Only `GET /api/health` endpoint exists.
+**Maturity**: Early implementation. Backend has full auth (register/login/refresh/logout) + tracked-product CRUD with Clean Architecture layers, DI, and tests. Frontend has auth forms, product list/detail pages, design-system primitives, Zustand auth store, and Storybook. API client is Orval-generated with custom axios mutator. Chrome extension remains a skeleton (MV3 manifest + minimal JS stubs). ~175 source files, ~10k lines.
 
 # GENERAL GUIDELINES
 - For new features, always create a new feature branch from the `develop` branch
@@ -31,18 +31,19 @@ Use this workflow in every session, including new sessions, unless the user expl
 # ARCHITECTURE OVERVIEW
 ## PACKAGE STRUCTURE
 ```
-db: PostgreSQL SQL files with mandatory versioning
+db: PostgreSQL SQL files with mandatory versioning (V001-V003 applied)
 docker: Docker and docker-compose configuration files
 docs: Collection of rules and conventions to follow
-packages/backend: Server-side code for the project
-packages/chrome-extension: Chrome Extension code for the project
-packages/frontend: Web client code for the project
-scripts: Docker image build and publish command scripts
+packages/backend: Python + FastAPI server (Clean Architecture + DDD)
+packages/frontend: React + Next.js web client (App Router + design system)
+packages/api-client: Orval-generated TypeScript API client + MSW mocks
+packages/chrome-extension: Chrome Extension (MV3, skeleton)
+scripts: Docker environment and build command scripts
 k8s: Reserved for future use, not used at this stage
 ```
 # TECHNOLOGY STACK
 - Frontend: React + TypeScript + Next.js + Zod (validate) + Storybook UI Library + Radix + Jest (unit) + Playwright(E2E) + Zustand
-- Backend: Python + FastAPI + Pydentic + SQLModel + PyTest + Swagger (with UI)
+- Backend: Python + FastAPI + Pydantic + SQLModel + PyTest + Swagger (with UI)
 
 ## Key Architectural Patterns
 1. DI
@@ -105,11 +106,9 @@ k8s: Reserved for future use, not used at this stage
 - CI/CD: `.github/workflows/` does not exist (pipeline design documented in `docs/conventions/testing.md`)
 - Dockerfiles: containers use inline build commands in `compose.yml`
 - Linter/formatter configs: `.eslintrc`, `.prettierrc`, `ruff.toml` not created
-- `next.config.*` for frontend, `vite.config.ts` / `manifest.config.ts` (CRXJS) for extension
-- `scripts/export-openapi.sh` referenced in docs but does not exist
+- `vite.config.ts` / `manifest.config.ts` (CRXJS) for chrome extension
 - `scripts/migrate.sh` is a placeholder — no migration runner (Alembic/Flyway) integrated
 - `scripts/bootstrap.sh` uses `npm install` despite `pnpm` being declared package manager
-- Env validation modules (`src/lib/env.ts`, Pydantic Settings) not implemented
 
 # COMMANDS
 - Local bootstrap: `bash scripts/bootstrap.sh`
