@@ -37,3 +37,17 @@ export {
   DialogDescription,
   DialogClose,
 } from './primitives/Dialog';
+
+export {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogPortal,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from './primitives/AlertDialog';
