@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 export type ToastVariant = 'default' | 'destructive' | 'success';
 
@@ -28,18 +28,32 @@ export function useToast() {
 // Used internally by Toaster component only
 export function useToastState() {
   const [current, setCurrent] = useState<(ToastOptions & { id: number }) | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     function handler(options: ToastOptions | null) {
+      if (timerRef.current !== null) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+
       if (options === null) {
         setCurrent(null);
       } else {
         setCurrent({ ...options, id: Date.now() });
-        setTimeout(() => setCurrent(null), 5000);
+        timerRef.current = setTimeout(() => {
+          setCurrent(null);
+          timerRef.current = null;
+        }, 5000);
       }
     }
     listeners.add(handler);
-    return () => { listeners.delete(handler); };
+    return () => {
+      listeners.delete(handler);
+      if (timerRef.current !== null) {
+        clearTimeout(timerRef.current);
+      }
+    };
   }, []);
 
   const dismiss = useCallback(() => publish(null), []);

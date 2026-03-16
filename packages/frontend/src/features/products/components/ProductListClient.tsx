@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { TrackedProductResponse } from '@findog/api-client/endpoints/index.schemas';
 import { Button } from '@findog/design-system';
 
@@ -21,6 +22,7 @@ export function ProductListClient({ items }: ProductListClientProps) {
   const [archiveProduct, setArchiveProduct] =
     useState<TrackedProductResponse | null>(null);
 
+  const router = useRouter();
   return (
     <>
       <div className="mb-[--space-6] flex items-center justify-between gap-[--space-3]">
@@ -38,6 +40,7 @@ export function ProductListClient({ items }: ProductListClientProps) {
             <ProductCard
               key={product.id}
               product={product}
+              onClick={() => router.push(`/products/${product.id}`)}
               onEdit={() => setEditProduct(product)}
               onArchive={() => setArchiveProduct(product)}
             />
