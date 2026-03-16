@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button, Input, Label } from '@findog/design-system';
 import { useRegisterApiAuthRegisterPost } from '@findog/api-client/endpoints/auth/auth';
 import { registerSchema, type RegisterInput } from '../schemas/register.schema';
-import { parseApiError } from '../utils/parse-api-error';
+import { parseApiError } from '@/lib/utils/parse-api-error';
 
 export function RegisterForm() {
   const router = useRouter();

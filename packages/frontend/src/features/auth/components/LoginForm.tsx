@@ -6,7 +6,7 @@ import { Button, Input, Label } from '@findog/design-system';
 import { useLoginApiAuthLoginPost } from '@findog/api-client/endpoints/auth/auth';
 import { loginSchema, type LoginInput } from '../schemas/login.schema';
 import { useAuthStore } from '@/stores/auth.store';
-import { parseApiError } from '../utils/parse-api-error';
+import { parseApiError } from '@/lib/utils/parse-api-error';
 
 export function LoginForm() {
   const router = useRouter();
