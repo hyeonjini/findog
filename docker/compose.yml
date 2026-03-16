@@ -39,6 +39,7 @@ services:
       API_BASE_URL: ${API_BASE_URL}
     volumes:
       - ../packages/frontend:/app
+      - ../packages/api-client/src:/api-client/src:ro
     env_file:
       - ../.env
     depends_on:

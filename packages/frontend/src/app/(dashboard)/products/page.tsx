@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 import type { TrackedProductListResponse } from '@findog/api-client/endpoints/index.schemas';
 
@@ -12,11 +13,8 @@ async function getTrackedProducts(): Promise<TrackedProductListResponse> {
   try {
     return await serverApiFetch<TrackedProductListResponse>('/api/tracked-products');
   } catch (error) {
-    // When SSR has no auth cookie/header (tokens are in client localStorage),
-    // the API returns 401. Return empty list so the client-side AuthGuard
-    // can handle the redirect if the user is truly unauthenticated.
     if (error instanceof ServerApiError && error.status === 401) {
-      return { items: [] };
+      redirect('/login');
     }
     throw error;
   }
