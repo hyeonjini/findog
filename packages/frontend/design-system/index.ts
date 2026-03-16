@@ -51,3 +51,8 @@ export {
   AlertDialogAction,
   AlertDialogCancel,
 } from './primitives/AlertDialog';
+
+// Toaster
+export { Toaster } from './primitives/Toaster';
+export { useToast } from './utils/use-toast';
+export type { ToastOptions, ToastVariant } from './utils/use-toast';
