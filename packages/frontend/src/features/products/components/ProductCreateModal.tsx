@@ -54,6 +54,9 @@ export function ProductCreateModal({
         router.refresh();
         handleOpenChange(false);
       },
+      onError: (error) => {
+        toast({ title: parseApiError(error), variant: 'destructive' });
+      },
     },
   });
 

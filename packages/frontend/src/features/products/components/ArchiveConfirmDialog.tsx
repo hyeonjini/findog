@@ -13,6 +13,7 @@ import {
   useToast,
 } from '@findog/design-system';
 import { useArchiveTrackedProductApiTrackedProductsTrackedProductIdArchivePost } from '@findog/api-client/endpoints';
+import { parseApiError } from '@/lib/utils/parse-api-error';
 
 type ArchiveConfirmDialogProps = {
   open: boolean;
@@ -39,6 +40,9 @@ export function ArchiveConfirmDialog({
         router.refresh();
         onOpenChange(false);
         onArchived?.();
+      },
+      onError: (error) => {
+        toast({ title: parseApiError(error), variant: 'destructive' });
       },
     },
   });

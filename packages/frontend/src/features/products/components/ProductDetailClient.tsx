@@ -7,6 +7,7 @@ import {
   useRestoreTrackedProductApiTrackedProductsTrackedProductIdRestorePost,
 } from '@findog/api-client/endpoints';
 import { Button, useToast } from '@findog/design-system';
+import { parseApiError } from '@/lib/utils/parse-api-error';
 
 import { ArchiveConfirmDialog } from './ArchiveConfirmDialog';
 import { ProductDetail, type ProductDetailProps } from './ProductDetail';
@@ -29,6 +30,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           toast({ title: 'Product restored', variant: 'success' });
           router.refresh();
         },
+        onError: (error) => {
+          toast({ title: parseApiError(error), variant: 'destructive' });
+        },
       },
     });
 
@@ -38,6 +42,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         onSuccess: () => {
           toast({ title: 'Refresh requested', variant: 'default' });
           router.refresh();
+        },
+        onError: (error) => {
+          toast({ title: parseApiError(error), variant: 'destructive' });
         },
       },
     });

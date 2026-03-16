@@ -74,6 +74,9 @@ function ProductUpdateModalComponent({
           router.refresh();
           handleOpenChange(false);
         },
+        onError: (error) => {
+          toast({ title: parseApiError(error), variant: 'destructive' });
+        },
       },
     },
   );
