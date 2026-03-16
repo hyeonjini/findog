@@ -1,6 +1,6 @@
 import type { Preview } from '@storybook/react';
 import { initialize, mswLoader } from 'msw-storybook-addon';
-import { getAuthMock } from '@findog/api-client/mocks/auth/auth.msw';
+import { getAuthMock, getTrackedProductsMock } from '../../api-client/src/msw';
 
 import '../src/app/globals.css';
 
@@ -16,7 +16,7 @@ const preview: Preview = {
       },
     },
     msw: {
-      handlers: [...getAuthMock()],
+      handlers: [...getAuthMock(), ...getTrackedProductsMock()],
     },
   },
   loaders: [mswLoader],
