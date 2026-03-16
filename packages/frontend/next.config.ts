@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
       "@findog/api-client": path.join(__dirname, "../api-client/src"),
     };
 
+    config.resolve.modules = [
+      ...(config.resolve.modules ?? []),
+      path.join(__dirname, "node_modules"),
+    ];
+
     return config;
   },
   env: {

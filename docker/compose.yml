@@ -33,13 +33,14 @@ services:
     image: node:24-alpine
     restart: unless-stopped
     working_dir: /app
-    command: sh -lc "pnpm install && (pnpm run dev -- --hostname 0.0.0.0 --port 3000 --no-turbo || pnpm run dev -- --hostname 0.0.0.0 --port 3000)"
+    command: sh -lc "corepack enable && pnpm install && npx next dev --webpack --hostname 0.0.0.0 --port 3000"
     environment:
       NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
       API_BASE_URL: ${API_BASE_URL}
     volumes:
       - ../packages/frontend:/app
       - ../packages/api-client/src:/api-client/src:ro
+      - ../tsconfig.base.json:/tsconfig.base.json:ro
     env_file:
       - ../.env
     depends_on:
