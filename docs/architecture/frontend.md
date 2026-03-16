@@ -61,6 +61,17 @@ app/
 - Dynamic segments use `[param]` for single values, `[...slug]` for catch-all.
 - Collocate `loading.tsx`, `error.tsx`, and `not-found.tsx` at the route level they handle.
 
+### Implemented Dashboard Components (Product CRUD)
+
+The dashboard uses a server/client split pattern:
+- **Server pages** (`products/page.tsx`, `products/[id]/page.tsx`): fetch data via `serverApiFetch`, pass to client wrappers
+- **Client wrappers** (`ProductListClient`, `ProductDetailClient`): manage modal state, render interactive UI
+- **Modals**: `ProductCreateModal`, `ProductUpdateModal` (Dialog-based), `ArchiveConfirmDialog` (AlertDialog-based)
+- **Providers**: `DashboardProviders` wraps dashboard layout with `QueryClientProvider` + `Toaster`
+- **Toast**: `useToast` hook (pub/sub pattern) + `Toaster` component for mutation feedback
+- **Schemas**: `create-product.schema.ts`, `update-product.schema.ts` with Zod validation
+- **Mutations** use `router.refresh()` to trigger server component re-fetch (not `queryClient.invalidateQueries`)
+
 ### Server vs. Client Components
 
 | Concern | Component type | Directive |
@@ -129,6 +140,10 @@ Wrappers in `design-system/primitives/` must:
 - Forward all Radix props via `React.ComponentPropsWithoutRef`.
 - Apply design tokens (not hardcoded values) for default styling.
 - Export a single named export matching the Radix component name.
+
+**Current design-system primitives:** Button, Input, Label, Card, Toast, Dialog, AlertDialog, Toaster
+
+**Current utilities:** `cn.ts` (class merge), `use-toast.ts` (pub/sub toast hook)
 
 ### Token Structure
 

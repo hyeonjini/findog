@@ -70,6 +70,8 @@ async def test_create_product_saves_and_publishes_event():
 
 ### pytest Markers
 
+> **Not yet configured.** The markers below are the intended setup. As of now, no `markers` key exists in `pyproject.toml` — add it before using `-m` selectors in CI.
+
 Declare in `pyproject.toml`:
 
 ```toml
@@ -111,6 +113,11 @@ pytest -m "not e2e"             # everything except browser tests
 **Stores** — call `useStore.getState()` directly. No component wrapper needed. Test state transitions and derived selectors.
 
 **Schema validation** — call Zod schemas with valid and invalid inputs. Assert on `.success` and `.error.issues`.
+
+**Current Jest testMatch paths (implemented):**
+- `design-system/**/*.test.tsx` — design-system primitive tests
+- `src/features/auth/schemas/**/*.test.ts` — auth Zod schema tests
+- `src/features/products/schemas/**/*.test.ts` — product Zod schema tests
 
 ```ts
 // Store unit test
@@ -173,6 +180,8 @@ test.beforeEach(async ({ request }) => {
 ---
 
 ## D. Chrome Extension Testing (Vitest)
+
+> **Not yet set up.** The extension is a skeleton (no TypeScript, no CRXJS, no `vitest.config.ts`). The patterns below are the intended approach for when the extension is built out.
 
 The extension runs in three distinct contexts: background service worker, content script, and popup. Each context has different globals and constraints.
 
@@ -238,6 +247,8 @@ export default defineConfig({
 
 ### Layer 2: pytest Contract Test
 
+> **Not yet implemented.** The `@pytest.mark.contract` marker is not registered in `pyproject.toml` and no contract test file exists yet.
+
 A dedicated test marked `@pytest.mark.contract` compares the committed `openapi.json` against the schema the live app actually serves:
 
 ```python
@@ -259,6 +270,8 @@ After orval regeneration, `tsc --noEmit` on `packages/api-client` and `packages/
 ---
 
 ## F. CI Pipeline Structure
+
+> **Not yet created.** `.github/workflows/` does not exist. The structure below is the intended design — implement it when CI is set up.
 
 ```
 push (any branch)

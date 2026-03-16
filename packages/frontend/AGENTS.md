@@ -2,7 +2,7 @@
 
 React 18 + Next.js (App Router) + TypeScript + Tailwind + Radix. Design-system-first.
 
-**Status**: Auth flow (login/register) and product views (list/detail) implemented. Design system has 5 primitives + tokens. Storybook configured with MSW mocks. Zustand auth store with persist.
+**Status**: Auth flow (login/register) and product management dashboard (list/detail/create/update/archive) implemented. Design system has 8 primitives + tokens. Storybook configured with MSW mocks. Zustand auth store with persist.
 
 ## STRUCTURE
 
@@ -13,15 +13,17 @@ src/
     (dashboard)/     # Route group: products list/detail (server components)
   features/
     auth/            # LoginForm, RegisterForm, schemas, utils
-    products/        # ProductCard, ProductDetail, EmptyState, formatters
+    products/        # ProductCard, ProductDetail, ProductCreateModal, ProductUpdateModal,
+                    #   ArchiveConfirmDialog, ProductListClient, ProductDetailClient,
+                    #   EmptyState, schemas, formatters
   stores/            # Zustand stores (auth.store.ts)
   lib/
     api/             # server.ts (SSR fetch), client.ts (browser axios)
     env.ts           # API base URL resolution (server vs browser)
 design-system/
-  primitives/        # Button, Input, Label, Card, Toast (Radix wrappers)
+  primitives/        # Button, Input, Label, Card, Toast, Dialog, AlertDialog, Toaster (Radix wrappers)
   tokens/            # colors.css, spacing.css, typography.css
-  utils/             # cn.ts (class merge)
+  utils/             # cn.ts (class merge), use-toast.ts (pub/sub toast hook)
   index.ts           # Barrel export — ONLY import from here
 ```
 
