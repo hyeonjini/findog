@@ -64,7 +64,7 @@ export function ProductCard({
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+    if (onClick && (e.key === 'Enter' || e.key === ' ') && e.currentTarget === e.target) {
       e.preventDefault();
       onClick();
     }
