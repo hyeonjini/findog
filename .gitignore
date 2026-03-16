@@ -1,4 +1,4 @@
-# macOS / Linux
+# OS
 .DS_Store
 
 # Editors
@@ -8,73 +8,57 @@
 # Python
 __pycache__/
 *.py[cod]
+*.egg-info/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .venv/
 venv/
 
-# Node
+# Node / pnpm
 node_modules/
+.pnpm-store/
+.pnp
+.pnp.js
+package-lock.json
+
+# Next.js
 .next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Build output
 dist/
-coverage/
+build/
 storybook-static/
+
+# Test output
+coverage/
 playwright-report/
 test-results/
 
-#NextJS
-/node_modules
-/.pnp
-.pnp.js
+# Env (keep .env.example as template)
+.env
+.env.*
+!.env.example
+.env*.local
 
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# local env files
-.env*.local
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-.pnpm-store
-
-# Env
-.env
-.env.*
-!.env.example
-
-# Logs
-*.log
+# Security
+*.pem
 
 # Docker
 postgres_data/
 
+# Vercel
+.vercel
+
 # Sisyphus planning artifacts
 .sisyphus/
-
-# Python build artifacts
-*.egg-info/
-
-# npm lockfile (project uses pnpm)
-package-lock.json
