@@ -16,18 +16,18 @@ import { useArchiveTrackedProductApiTrackedProductsTrackedProductIdArchivePost }
 
 type ArchiveConfirmDialogProps = {
   open: boolean;
-  onOpenChangeAction: (open: boolean) => void;
+  onOpenChange: (open: boolean) => void;
   productTitle: string;
   productId: string;
-  onArchivedAction?: () => void;
+  onArchived?: () => void;
 };
 
 export function ArchiveConfirmDialog({
   open,
-  onOpenChangeAction,
+  onOpenChange,
   productTitle,
   productId,
-  onArchivedAction,
+  onArchived,
 }: ArchiveConfirmDialogProps) {
   const router = useRouter();
   const { toast } = useToast();
@@ -37,8 +37,8 @@ export function ArchiveConfirmDialog({
       onSuccess: () => {
         toast({ title: 'Product archived', variant: 'default' });
         router.refresh();
-        onOpenChangeAction(false);
-        onArchivedAction?.();
+        onOpenChange(false);
+        onArchived?.();
       },
     },
   });
@@ -48,7 +48,7 @@ export function ArchiveConfirmDialog({
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChangeAction}>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Archive product?</AlertDialogTitle>

@@ -32,7 +32,7 @@ function createDecorator() {
 export const Default: Story = {
   args: {
     open: true,
-    onOpenChangeAction: () => {},
+    onOpenChange: () => {},
     productTitle: 'Test Product',
     productId: 'test-product-id-123',
   },
