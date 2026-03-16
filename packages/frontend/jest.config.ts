@@ -12,6 +12,7 @@ const config: Config = {
   testMatch: [
     '<rootDir>/design-system/**/*.test.tsx',
     '<rootDir>/src/features/auth/schemas/**/*.test.ts',
+    '<rootDir>/src/features/products/schemas/**/*.test.ts',
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   testPathIgnorePatterns: [

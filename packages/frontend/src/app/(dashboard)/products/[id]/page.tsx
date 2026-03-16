@@ -6,7 +6,7 @@ import type { TrackedProductResponse } from '@findog/api-client/endpoints/index.
 import { serverApiFetch, ServerApiError } from '@/lib/api/server';
 
 export const dynamic = 'force-dynamic';
-import { ProductDetail } from '@/features/products/components/ProductDetail';
+import { ProductDetailClient } from '@/features/products/components/ProductDetailClient';
 
 async function getTrackedProduct(id: string) {
   try {
@@ -59,7 +59,7 @@ export default async function ProductDetailPage({
         </Link>
       </nav>
 
-      <ProductDetail product={product} />
+      <ProductDetailClient product={product} />
     </div>
   );
 }

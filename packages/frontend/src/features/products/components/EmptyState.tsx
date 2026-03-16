@@ -1,10 +1,12 @@
+import { Button } from '@findog/design-system';
 import { cn } from '@findog/design-system/utils/cn';
 
 export interface EmptyStateProps {
+  onCreateClick?: () => void;
   className?: string;
 }
 
-export function EmptyState({ className }: EmptyStateProps) {
+export function EmptyState({ onCreateClick, className }: EmptyStateProps) {
   return (
     <div
       data-testid="empty-state"
@@ -38,6 +40,12 @@ export function EmptyState({ className }: EmptyStateProps) {
         Save products from any shopping page using the FinDog browser extension.
         We&apos;ll track prices and availability for you.
       </p>
+
+      {onCreateClick && (
+        <Button onClick={onCreateClick} className="mt-[--space-4]">
+          Add your first product
+        </Button>
+      )}
     </div>
   );
 }

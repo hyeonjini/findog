@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { TrackedProductResponse } from '@findog/api-client/endpoints/index.schemas';
-import { Card, CardContent } from '@findog/design-system';
+import { Button, Card, CardContent } from '@findog/design-system';
 import { cn } from '@findog/design-system/utils/cn';
 import { formatPrice } from '../utils/format-price';
 
@@ -40,10 +40,18 @@ const FALLBACK_STATUS = {
 export interface ProductCardProps {
   product: TrackedProductResponse;
   onClick?: () => void;
+  onEdit?: () => void;
+  onArchive?: () => void;
   className?: string;
 }
 
-export function ProductCard({ product, onClick, className }: ProductCardProps) {
+export function ProductCard({
+  product,
+  onClick,
+  onEdit,
+  onArchive,
+  className,
+}: ProductCardProps) {
   const [imgError, setImgError] = useState(false);
 
   const status = STATUS_STYLES[product.monitoring_status] ?? {
@@ -56,11 +64,13 @@ export function ProductCard({ product, onClick, className }: ProductCardProps) {
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+    if (onClick && (e.key === 'Enter' || e.key === ' ') && e.currentTarget === e.target) {
       e.preventDefault();
       onClick();
     }
   };
+
+  const showArchiveAction = onArchive && product.monitoring_status !== 'archived';
 
   return (
     <Card
@@ -104,38 +114,73 @@ export function ProductCard({ product, onClick, className }: ProductCardProps) {
           )}
         </div>
 
-        <div className="flex min-w-0 flex-1 flex-col justify-between">
-          <div>
-            <h3 className="truncate text-[length:--font-size-base] font-[number:--font-weight-bold] leading-[--line-height-normal] text-[--color-text-primary]">
-              {product.source_title}
-            </h3>
-            {product.source_platform && (
-              <p className="mt-[--space-1] truncate text-[length:--font-size-sm] text-[--color-text-muted]">
-                {product.source_platform}
-              </p>
-            )}
-          </div>
-
-          <div className="mt-[--space-2] flex items-center justify-between gap-[--space-2]">
-            <span className="text-[length:--font-size-base] font-[number:--font-weight-bold] text-[--color-text-primary]">
-              {price}
-            </span>
-
-            <span
-              className={cn(
-                'inline-flex items-center gap-[--space-1] rounded-full px-[--space-2] py-0.5 text-[length:--font-size-sm]',
-                status.surface,
-                status.text,
+        <div className="flex min-w-0 flex-1 flex-col justify-between gap-[--space-2]">
+          <div className="space-y-[--space-2]">
+            <div>
+              <h3 className="truncate text-[length:--font-size-base] font-[number:--font-weight-bold] leading-[--line-height-normal] text-[--color-text-primary]">
+                {product.source_title}
+              </h3>
+              {product.source_platform && (
+                <p className="mt-[--space-1] truncate text-[length:--font-size-sm] text-[--color-text-muted]">
+                  {product.source_platform}
+                </p>
               )}
-            >
+            </div>
+
+            <div className="flex items-center justify-between gap-[--space-2]">
+              <span className="text-[length:--font-size-base] font-[number:--font-weight-bold] text-[--color-text-primary]">
+                {price}
+              </span>
+
               <span
                 className={cn(
-                  'inline-block h-1.5 w-1.5 rounded-full',
-                  status.dot,
+                  'inline-flex items-center gap-[--space-1] rounded-full px-[--space-2] py-0.5 text-[length:--font-size-sm]',
+                  status.surface,
+                  status.text,
                 )}
-              />
-              {status.label}
-            </span>
+              >
+                <span
+                  className={cn(
+                    'inline-block h-1.5 w-1.5 rounded-full',
+                    status.dot,
+                  )}
+                />
+                {status.label}
+              </span>
+            </div>
+
+            {(onEdit || showArchiveAction) && (
+              <div className="flex flex-wrap gap-[--space-2]">
+                {onEdit && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    aria-label="Edit product"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onEdit();
+                    }}
+                  >
+                    Edit
+                  </Button>
+                )}
+                {showArchiveAction && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    aria-label="Archive product"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onArchive();
+                    }}
+                  >
+                    Archive
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </CardContent>

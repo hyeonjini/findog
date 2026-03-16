@@ -24,3 +24,35 @@ export {
   type ToastProps,
   type ToastActionElement,
 } from './primitives/Toast';
+
+export {
+  Dialog,
+  DialogTrigger,
+  DialogPortal,
+  DialogOverlay,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from './primitives/Dialog';
+
+export {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogPortal,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from './primitives/AlertDialog';
+
+// Toaster
+export { Toaster } from './primitives/Toaster';
+export { useToast } from './utils/use-toast';
+export type { ToastOptions, ToastVariant } from './utils/use-toast';
