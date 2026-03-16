@@ -34,7 +34,7 @@ type ProductUpdateModalProps = {
     lowest_price_tracking_enabled: boolean;
   };
   open: boolean;
-  onOpenChange: unknown;
+  onOpenChange: (open: boolean) => void;
 };
 
 type FormSubmitEvent = Parameters<
@@ -56,7 +56,6 @@ function ProductUpdateModalComponent({
   onOpenChange,
   product,
 }: ProductUpdateModalProps) {
-  const handleDialogOpenChange = onOpenChange as (open: boolean) => void;
   const router = useRouter();
   const { toast } = useToast();
 
@@ -98,7 +97,7 @@ function ProductUpdateModalComponent({
       resetForm();
     }
 
-    handleDialogOpenChange(nextOpen);
+    onOpenChange(nextOpen);
   }
 
   function handleSubmit(event: FormSubmitEvent) {
