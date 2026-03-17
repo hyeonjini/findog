@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Button } from '@findog/design-system';
 import { useAuthStore } from '@/stores/auth.store';
 
@@ -66,6 +67,12 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
               {email}
             </span>
           )}
+          <Link
+            href="/profile"
+            className="text-[length:--font-size-sm] text-[--color-text-muted] hover:text-[--color-text-primary]"
+          >
+            Profile
+          </Link>
           <Button
             variant="ghost"
             size="sm"
