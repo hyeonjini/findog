@@ -9,7 +9,7 @@ export function LogoutButton() {
 
   async function handleLogout() {
     clearAuth();
-    router.push('/login');
+    router.replace('/login');
   }
 
   return (

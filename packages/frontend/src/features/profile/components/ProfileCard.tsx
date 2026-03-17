@@ -10,6 +10,7 @@ interface ProfileCardProps {
 
 export function ProfileCard({ user }: ProfileCardProps) {
   const formattedDate = new Date(user.created_at).toLocaleDateString('en-US', {
+    timeZone: 'UTC',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
