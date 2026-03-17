@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import type { ExtensionResponse } from '../../lib/messaging/types';
 import { LoginForm } from '../../components/LoginForm';
 import { SaveButton } from '../../components/SaveButton';
 import { StatusMessage } from '../../components/StatusMessage';
@@ -15,7 +16,7 @@ export function App() {
 
   useEffect(() => {
     // Check auth state on popup open
-    browser.runtime.sendMessage({ type: 'CHECK_AUTH' }).then((response: any) => {
+    browser.runtime.sendMessage({ type: 'CHECK_AUTH' }).then((response: ExtensionResponse) => {
       if (response?.authenticated) {
         setAuthState('authenticated');
       } else {
@@ -41,7 +42,7 @@ export function App() {
     setStatusMessage(undefined);
 
     try {
-      const response: any = await browser.runtime.sendMessage({
+      const response = await browser.runtime.sendMessage({
         type: 'SAVE_PRODUCT',
         payload: {
           source_url: pageUrl,

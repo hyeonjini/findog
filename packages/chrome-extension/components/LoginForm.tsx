@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { ExtensionResponse } from '../lib/messaging/types';
 
 interface LoginFormProps {
   onLoginSuccess: () => void;
@@ -16,10 +17,10 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
     setLoading(true);
 
     try {
-      const response: any = await browser.runtime.sendMessage({
+      const response = await browser.runtime.sendMessage({
         type: 'LOGIN',
         payload: { email, password },
-      });
+      }) as ExtensionResponse & { type: 'LOGIN' };
 
       if (response?.success) {
         onLoginSuccess();
