@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@findog/design-system';
 import { useAuthStore } from '@/stores/auth.store';
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const isHydrated = useAuthStore((s) => s.isHydrated);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const user = useAuthStore((s) => s.user);
@@ -53,12 +54,42 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-[--color-border-default] bg-[--color-surface-default] px-[--space-4]">
-        <span className="text-[length:--font-size-lg] font-[number:--font-weight-bold] tracking-tight text-[--color-text-primary]">
+      <header className="sticky top-0 z-10 flex min-h-14 flex-wrap items-center gap-y-1 border-b border-[--color-border-default] bg-[--color-surface-default] px-[--space-4]">
+        <Link
+          href="/products"
+          className="text-[length:--font-size-lg] font-[number:--font-weight-bold] tracking-tight text-[--color-text-primary] hover:text-[--color-brand-500]"
+        >
           FinDog
-        </span>
+        </Link>
 
-        <div className="flex items-center gap-[--space-3]">
+        <nav className="ml-[--space-6] flex items-center gap-3">
+          <Link
+            href="/products"
+            className="min-h-[32px] inline-flex items-center text-[length:--font-size-sm] hover:text-[--color-brand-500]"
+            style={{
+              color: pathname.startsWith('/products')
+                ? 'var(--color-brand-500)'
+                : 'var(--color-text-muted)',
+              fontWeight: pathname.startsWith('/products') ? 600 : 400,
+            }}
+          >
+            Products
+          </Link>
+          <Link
+            href="/profile"
+            className="min-h-[32px] inline-flex items-center text-[length:--font-size-sm] hover:text-[--color-brand-500]"
+            style={{
+              color: pathname.startsWith('/profile')
+                ? 'var(--color-brand-500)'
+                : 'var(--color-text-muted)',
+              fontWeight: pathname.startsWith('/profile') ? 600 : 400,
+            }}
+          >
+            Profile
+          </Link>
+        </nav>
+
+        <div className="ml-auto flex items-center gap-[--space-3]">
           {email && (
             <span
               data-testid="dashboard-user-email"
@@ -67,19 +98,13 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
               {email}
             </span>
           )}
-          <Link
-            href="/profile"
-            className="text-[length:--font-size-sm] text-[--color-text-muted] hover:text-[--color-text-primary]"
-          >
-            Profile
-          </Link>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleLogout}
             data-testid="dashboard-logout"
           >
-            Log out
+            Sign out
           </Button>
         </div>
       </header>
