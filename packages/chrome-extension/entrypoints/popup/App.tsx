@@ -30,7 +30,7 @@ export function App() {
   // Get current tab info when authenticated
   useEffect(() => {
     if (authState === 'authenticated') {
-      browser.tabs.query({ active: true, currentWindow: true }).then(([tab]) => {
+      browser.tabs.query({ active: true, currentWindow: true }).then(([tab]: chrome.tabs.Tab[]) => {
         setPageTitle(tab?.title ?? '');
         setPageUrl(tab?.url ?? '');
       });
