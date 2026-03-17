@@ -1,18 +1,7 @@
 import { createRoot } from 'react-dom/client';
+import { App } from './App';
 
-function App() {
-  return (
-    <main>
-      <h1>FinDog</h1>
-      <p>Chrome extension popup placeholder</p>
-    </main>
-  );
+const root = document.getElementById('root');
+if (root) {
+  createRoot(root).render(<App />);
 }
-
-const container = document.getElementById('root');
-
-if (!container) {
-  throw new Error('Popup root element not found');
-}
-
-createRoot(container).render(<App />);
