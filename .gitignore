@@ -62,3 +62,7 @@ postgres_data/
 
 # Sisyphus planning artifacts
 .sisyphus/
+
+# Chrome Extension build artifacts
+.wxt/
+.output/
