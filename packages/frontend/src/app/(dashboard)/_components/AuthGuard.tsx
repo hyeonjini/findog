@@ -54,7 +54,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 flex h-14 items-center border-b border-[--color-border-default] bg-[--color-surface-default] px-[--space-4]">
+      <header className="sticky top-0 z-10 flex min-h-14 flex-wrap items-center gap-y-1 border-b border-[--color-border-default] bg-[--color-surface-default] px-[--space-4]">
         <Link
           href="/products"
           className="text-[length:--font-size-lg] font-[number:--font-weight-bold] tracking-tight text-[--color-text-primary] hover:text-[--color-brand-500]"
@@ -62,10 +62,10 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
           FinDog
         </Link>
 
-        <nav className="ml-[--space-6] flex items-center gap-[--space-4]">
+        <nav className="ml-[--space-6] flex items-center gap-3">
           <Link
             href="/products"
-            className="text-[length:--font-size-sm] hover:text-[--color-brand-500]"
+            className="min-h-[32px] inline-flex items-center text-[length:--font-size-sm] hover:text-[--color-brand-500]"
             style={{
               color: pathname.startsWith('/products')
                 ? 'var(--color-brand-500)'
@@ -77,7 +77,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
           </Link>
           <Link
             href="/profile"
-            className="text-[length:--font-size-sm] hover:text-[--color-brand-500]"
+            className="min-h-[32px] inline-flex items-center text-[length:--font-size-sm] hover:text-[--color-brand-500]"
             style={{
               color: pathname.startsWith('/profile')
                 ? 'var(--color-brand-500)'
