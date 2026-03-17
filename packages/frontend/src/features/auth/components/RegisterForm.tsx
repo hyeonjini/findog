@@ -10,6 +10,7 @@ import { parseApiError } from '@/lib/utils/parse-api-error';
 export function RegisterForm() {
   const router = useRouter();
 
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<RegisterInput>({
     email: '',
     password: '',
@@ -110,24 +111,46 @@ export function RegisterForm() {
 
       <div className="flex flex-col gap-[--space-1]">
         <Label htmlFor="register-password">Password</Label>
-        <Input
-          id="register-password"
-          data-testid="register-password"
-          type="password"
-          placeholder="Min. 8 characters"
-          autoComplete="new-password"
-          value={formData.password}
-          onChange={handleChange('password')}
-          aria-invalid={!!fieldErrors.password}
-          aria-describedby={
-            fieldErrors.password ? 'register-password-error' : undefined
-          }
-          className={
-            fieldErrors.password
-              ? 'border-[--color-error-500] focus-visible:ring-[--color-error-500]'
-              : ''
-          }
-        />
+        <div style={{ position: 'relative' }}>
+          <Input
+            id="register-password"
+            data-testid="register-password"
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Min. 8 characters"
+            autoComplete="new-password"
+            value={formData.password}
+            onChange={handleChange('password')}
+            aria-invalid={!!fieldErrors.password}
+            aria-describedby={
+              fieldErrors.password ? 'register-password-error' : undefined
+            }
+            className={
+              fieldErrors.password
+                ? 'border-[--color-error-500] focus-visible:ring-[--color-error-500]'
+                : ''
+            }
+            style={{ paddingRight: '48px' }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            style={{
+              position: 'absolute',
+              right: '10px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--color-text-muted)',
+              fontSize: '12px',
+              padding: '0',
+            }}
+          >
+            {showPassword ? 'Hide' : 'Show'}
+          </button>
+        </div>
         {fieldErrors.password && (
           <p
             id="register-password-error"

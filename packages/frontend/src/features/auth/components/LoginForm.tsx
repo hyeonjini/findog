@@ -12,6 +12,7 @@ export function LoginForm() {
   const router = useRouter();
   const setTokens = useAuthStore((s) => s.setTokens);
 
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<LoginInput>({
     email: '',
     password: '',
@@ -113,24 +114,46 @@ export function LoginForm() {
 
       <div className="flex flex-col gap-[--space-1]">
         <Label htmlFor="login-password">Password</Label>
-        <Input
-          id="login-password"
-          data-testid="login-password"
-          type="password"
-          placeholder="Enter your password"
-          autoComplete="current-password"
-          value={formData.password}
-          onChange={handleChange('password')}
-          aria-invalid={!!fieldErrors.password}
-          aria-describedby={
-            fieldErrors.password ? 'login-password-error' : undefined
-          }
-          className={
-            fieldErrors.password
-              ? 'border-[--color-error-500] focus-visible:ring-[--color-error-500]'
-              : ''
-          }
-        />
+        <div style={{ position: 'relative' }}>
+          <Input
+            id="login-password"
+            data-testid="login-password"
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Enter your password"
+            autoComplete="current-password"
+            value={formData.password}
+            onChange={handleChange('password')}
+            aria-invalid={!!fieldErrors.password}
+            aria-describedby={
+              fieldErrors.password ? 'login-password-error' : undefined
+            }
+            className={
+              fieldErrors.password
+                ? 'border-[--color-error-500] focus-visible:ring-[--color-error-500]'
+                : ''
+            }
+            style={{ paddingRight: '48px' }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            style={{
+              position: 'absolute',
+              right: '10px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--color-text-muted)',
+              fontSize: '12px',
+              padding: '0',
+            }}
+          >
+            {showPassword ? 'Hide' : 'Show'}
+          </button>
+        </div>
         {fieldErrors.password && (
           <p
             id="login-password-error"
