@@ -1,11 +1,18 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from uuid import UUID
 
 from app.domain.pricing.entity import PricePoint
 from app.domain.pricing.ports import PriceHistoryRepository
 from app.domain.tracking.exceptions import TrackedProductNotFoundError
 from app.domain.tracking.repository import TrackingRepository
+
+
+@dataclass(frozen=True)
+class PriceHistoryResult:
+    items: list[PricePoint]
+    total: int
 
 
 class GetPriceHistoryQuery:
@@ -22,11 +29,13 @@ class GetPriceHistoryQuery:
 
     def execute(
         self, product_id: UUID, user_id: UUID, *, limit: int = 50
-    ) -> list[PricePoint]:
+    ) -> PriceHistoryResult:
         product = self._tracking_repo.find_by_id(product_id)
         if product is None or product.user_id != user_id:
             raise TrackedProductNotFoundError
 
-        return self._price_history_repo.list_by_product(
+        items = self._price_history_repo.list_by_product(
             product_id, limit=limit
         )
+        total = self._price_history_repo.count_by_product(product_id)
+        return PriceHistoryResult(items=items, total=total)

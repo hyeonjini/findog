@@ -61,6 +61,7 @@ class TestGetPriceHistoryQuery:
 
         price_history_repo = Mock(spec=PriceHistoryRepository)
         cast(Mock, price_history_repo.list_by_product).return_value = price_points
+        cast(Mock, price_history_repo.count_by_product).return_value = 1
 
         query = GetPriceHistoryQuery(
             price_history_repo=cast(PriceHistoryRepository, price_history_repo),
@@ -69,10 +70,14 @@ class TestGetPriceHistoryQuery:
 
         result = query.execute(product_id=product_id, user_id=user_id)
 
-        assert result == price_points
+        assert result.items == price_points
+        assert result.total == 1
         cast(Mock, tracking_repo.find_by_id).assert_called_once_with(product_id)
         cast(Mock, price_history_repo.list_by_product).assert_called_once_with(
             product_id, limit=50
+        )
+        cast(Mock, price_history_repo.count_by_product).assert_called_once_with(
+            product_id
         )
 
     def test_raises_when_product_not_found(self) -> None:

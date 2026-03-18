@@ -41,9 +41,9 @@ class PriceHistoryListResponse(BaseModel):
 
     @classmethod
     def from_entities(
-        cls, price_points: list[PricePoint]
+        cls, price_points: list[PricePoint], *, total: int
     ) -> "PriceHistoryListResponse":
         return cls(
             items=[PriceHistoryResponse.from_entity(pp) for pp in price_points],
-            total=len(price_points),
+            total=total,
         )

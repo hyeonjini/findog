@@ -36,7 +36,7 @@ def get_price_history(
     )
 
     try:
-        price_points = query.execute(
+        result = query.execute(
             product_id=tracked_product_id,
             user_id=current_user.id,
             limit=limit,
@@ -47,4 +47,6 @@ def get_price_history(
             detail="Tracked product not found",
         ) from exc
 
-    return PriceHistoryListResponse.from_entities(price_points)
+    return PriceHistoryListResponse.from_entities(
+        result.items, total=result.total
+    )

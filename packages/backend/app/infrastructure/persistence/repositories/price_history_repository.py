@@ -13,6 +13,7 @@ from __future__ import annotations
 from typing import override
 from uuid import UUID
 
+from sqlalchemy import func
 from sqlmodel import Session, select
 
 from app.domain.pricing.entity import PricePoint
@@ -50,6 +51,13 @@ class SqlaPriceHistoryRepository(PriceHistoryRepository):
         )
         models = self._session.exec(statement).all()
         return [self._to_domain(model) for model in models]
+
+    @override
+    def count_by_product(self, tracked_product_id: UUID) -> int:
+        statement = select(func.count()).where(
+            PriceHistoryTable.tracked_product_id == tracked_product_id
+        ).select_from(PriceHistoryTable)
+        return self._session.exec(statement).one()  # type: ignore[return-value]
 
     @override
     def latest_by_product_and_platform(

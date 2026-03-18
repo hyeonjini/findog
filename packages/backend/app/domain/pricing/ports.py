@@ -16,6 +16,9 @@ class PriceHistoryRepository(Protocol):
     ) -> list[PricePoint]:
         ...
 
+    def count_by_product(self, tracked_product_id: UUID) -> int:
+        ...
+
     def latest_by_product_and_platform(
         self, tracked_product_id: UUID
     ) -> dict[str, PricePoint]:
