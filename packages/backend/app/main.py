@@ -1,8 +1,9 @@
+import asyncio
 import importlib
-from collections.abc import AsyncIterator, Awaitable, Callable
+from collections.abc import AsyncIterator, Awaitable, Callable, Coroutine
 from contextlib import asynccontextmanager
 from types import ModuleType
-from typing import Annotated, cast
+from typing import Annotated, Protocol, cast
 
 from fastapi import APIRouter, Depends, FastAPI
 from starlette.middleware.cors import CORSMiddleware
@@ -10,6 +11,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 
 from app.domain.auth.ports import PasswordHasher, RefreshTokenRepository, TokenService
+from app.domain.pricing.ports import PlatformAdapter, SearchStrategy
 from app.domain.tracking.repository import TrackingRepository
 from app.domain.user.repository import UserRepository
 from app.infrastructure.persistence.repositories.tracked_product_repository import (
@@ -59,6 +61,34 @@ PasswordHasherDep = Annotated[PasswordHasher, Depends(get_password_hasher)]
 TokenServiceDep = Annotated[TokenService, Depends(get_token_service)]
 
 
+class _EnabledPlatformRegistry(Protocol):
+    def all_enabled(self) -> dict[str, PlatformAdapter]: ...
+
+
+class _PlatformRegistryClass(Protocol):
+    @classmethod
+    def from_yaml(cls, config_path: str) -> _EnabledPlatformRegistry: ...
+
+
+class _SchedulerSessionFactoryInstance(Protocol):
+    def create_session(self) -> object: ...
+
+
+class _SchedulerSessionFactoryClass(Protocol):
+    def __call__(self) -> _SchedulerSessionFactoryInstance: ...
+
+
+class _StartPriceCheckLoop(Protocol):
+    def __call__(
+        self,
+        *,
+        session_factory: _SchedulerSessionFactoryInstance,
+        adapters: dict[str, PlatformAdapter],
+        strategy: SearchStrategy,
+        interval_minutes: int,
+    ) -> Coroutine[object, object, None]: ...
+
+
 def _include_api_router(app: FastAPI, *, allow_deferred_import_error: bool = False) -> None:
     if getattr(app.state, "api_router_included", False):
         return
@@ -86,7 +116,56 @@ def _include_api_router(app: FastAPI, *, allow_deferred_import_error: bool = Fal
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     _include_api_router(app)
+
+    scheduler_task: asyncio.Task[None] | None = None
+    if settings.SCHEDULER_ENABLED:
+        registry_module = importlib.import_module("app.infrastructure.external.registry")
+        strategy_module = importlib.import_module("app.infrastructure.external.strategy")
+        scheduler_session_factory_module = importlib.import_module(
+            "app.infrastructure.scheduler.session_factory"
+        )
+        scheduler_setup_module = importlib.import_module(
+            "app.infrastructure.scheduler.setup"
+        )
+
+        platform_registry_cls = cast(
+            _PlatformRegistryClass, getattr(registry_module, "PlatformRegistry")
+        )
+        simple_search_strategy_cls = cast(
+            Callable[[], SearchStrategy],
+            getattr(strategy_module, "SimpleSearchStrategy"),
+        )
+        scheduler_session_factory_cls = cast(
+            _SchedulerSessionFactoryClass,
+            getattr(scheduler_session_factory_module, "SchedulerSessionFactory"),
+        )
+        start_price_check_loop_fn = cast(
+            _StartPriceCheckLoop,
+            getattr(scheduler_setup_module, "start_price_check_loop"),
+        )
+
+        registry = platform_registry_cls.from_yaml(settings.PLATFORMS_CONFIG_PATH)
+        adapters = registry.all_enabled()
+        strategy = simple_search_strategy_cls()
+        session_factory = scheduler_session_factory_cls()
+
+        scheduler_task = asyncio.create_task(
+            start_price_check_loop_fn(
+                session_factory=session_factory,
+                adapters=adapters,
+                strategy=strategy,
+                interval_minutes=settings.PRICE_CHECK_INTERVAL_MINUTES,
+            )
+        )
+
     yield
+
+    if scheduler_task is not None:
+        _ = scheduler_task.cancel()
+        try:
+            await scheduler_task
+        except asyncio.CancelledError:
+            pass
 
 
 def create_app() -> FastAPI:
