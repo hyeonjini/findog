@@ -2,13 +2,18 @@
 @import '../../design-system/tokens/colors.css';
 @import '../../design-system/tokens/spacing.css';
 @import '../../design-system/tokens/typography.css';
+@import '../../design-system/tokens/effects.css';
 
 @layer base {
   body {
-    @apply min-h-screen bg-slate-50 text-slate-900 antialiased px-4 py-6;
+    font-family: var(--font-sans);
+    background-color: var(--color-bg-subtle);
+    color: var(--color-text-primary);
+    @apply min-h-screen antialiased;
   }
 
-  h1 {
-    @apply text-2xl font-semibold leading-tight tracking-tight;
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
   }
 }
