@@ -40,24 +40,6 @@ export default function LandingPage() {
     }
   }, [isHydrated, isAuthenticated, router]);
 
-  if (!isHydrated) {
-    return (
-      <div
-        className="flex min-h-screen items-center justify-center"
-        style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-      >
-        <div
-          className="h-8 w-8 animate-spin rounded-full border-[3px] border-t-transparent"
-          style={{ borderColor: 'var(--color-brand-500)', borderTopColor: 'transparent' }}
-        />
-      </div>
-    );
-  }
-
-  if (isAuthenticated) {
-    return null;
-  }
-
   return (
     <div
       className="flex min-h-screen flex-col"
