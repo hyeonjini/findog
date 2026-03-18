@@ -11,9 +11,12 @@ from starlette.requests import Request
 from starlette.responses import Response
 
 from app.domain.auth.ports import PasswordHasher, RefreshTokenRepository, TokenService
-from app.domain.pricing.ports import PlatformAdapter, SearchStrategy
+from app.domain.pricing.ports import PlatformAdapter, PriceHistoryRepository, SearchStrategy
 from app.domain.tracking.repository import TrackingRepository
 from app.domain.user.repository import UserRepository
+from app.infrastructure.persistence.repositories.price_history_repository import (
+    SqlaPriceHistoryRepository,
+)
 from app.infrastructure.persistence.repositories.tracked_product_repository import (
     SqlaTrackedProductRepository,
 )
@@ -39,6 +42,10 @@ def get_tracking_repository(session: SessionDep) -> TrackingRepository:
     return SqlaTrackedProductRepository(session)
 
 
+def get_price_history_repository(session: SessionDep) -> PriceHistoryRepository:
+    return SqlaPriceHistoryRepository(session)
+
+
 def get_password_hasher() -> PasswordHasher:
     return BcryptPasswordHasher()
 
@@ -57,6 +64,9 @@ RefreshTokenRepositoryDep = Annotated[
     Depends(get_refresh_token_repository),
 ]
 TrackingRepositoryDep = Annotated[TrackingRepository, Depends(get_tracking_repository)]
+PriceHistoryRepositoryDep = Annotated[
+    PriceHistoryRepository, Depends(get_price_history_repository)
+]
 PasswordHasherDep = Annotated[PasswordHasher, Depends(get_password_hasher)]
 TokenServiceDep = Annotated[TokenService, Depends(get_token_service)]
 
