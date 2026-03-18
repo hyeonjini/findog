@@ -140,18 +140,23 @@ export function LoginForm() {
             aria-label={showPassword ? 'Hide password' : 'Show password'}
             style={{
               position: 'absolute',
-              right: '10px',
+              right: '12px',
               top: '50%',
               transform: 'translateY(-50%)',
               background: 'none',
               border: 'none',
               cursor: 'pointer',
               color: 'var(--color-text-muted)',
-              fontSize: '12px',
-              padding: '0',
+              fontSize: 'var(--font-size-xs)',
+              fontWeight: 'var(--font-weight-medium)',
+              padding: '4px 6px',
+              borderRadius: 'var(--radius-sm)',
+              letterSpacing: '0.02em',
             }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-text-primary)'; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-text-muted)'; }}
           >
-            {showPassword ? 'Hide' : 'Show'}
+            {showPassword ? '숨기기' : '보기'}
           </button>
         </div>
         {fieldErrors.password && (

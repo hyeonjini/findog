@@ -1,41 +1,46 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@findog/design-system';
 import { RegisterForm } from '@/features/auth/components/RegisterForm';
 
 export default function RegisterPage() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create account</CardTitle>
-        <CardDescription>
-          Sign up to start tracking your products.
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent>
-        <RegisterForm />
-      </CardContent>
-
-      <CardFooter>
-        <p className="w-full text-center text-[length:--font-size-sm] text-[--color-text-muted]">
-          Already have an account?{' '}
-          <Link
-            href="/login"
-            className="font-[number:--font-weight-medium] text-[--color-brand-500] hover:text-[--color-brand-600] underline-offset-4 hover:underline"
-          >
-            Sign in
-          </Link>
+    <div className="p-8">
+      <div className="mb-6">
+        <h1
+          style={{
+            fontSize: 'var(--font-size-2xl)',
+            fontWeight: 'var(--font-weight-bold)',
+            color: 'var(--color-text-primary)',
+            marginBottom: '0.25rem',
+          }}
+        >
+          회원가입
+        </h1>
+        <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
+          가격 추적을 시작하세요
         </p>
-      </CardFooter>
-    </Card>
+      </div>
+
+      <RegisterForm />
+
+      <p
+        className="mt-6 text-center"
+        style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}
+      >
+        이미 계정이 있으신가요?{' '}
+        <Link
+          href="/login"
+          style={{
+            color: 'var(--color-brand-500)',
+            fontWeight: 'var(--font-weight-medium)',
+            textDecoration: 'none',
+          }}
+          className="hover:underline"
+        >
+          로그인
+        </Link>
+      </p>
+    </div>
   );
 }
