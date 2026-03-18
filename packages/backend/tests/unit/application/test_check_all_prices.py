@@ -10,7 +10,7 @@ from uuid import UUID
 
 from app.application.pricing.commands.check_all_prices import CheckAllPricesInteractor
 from app.domain.pricing.entity import PricePoint
-from app.domain.pricing.ports import PriceHistoryRepository, SearchStrategy
+from app.domain.pricing.ports import PlatformAdapter, PriceHistoryRepository, SearchStrategy
 from app.domain.pricing.value_objects import PriceResult
 from app.domain.tracking.entity import TrackedProduct
 from app.domain.tracking.repository import TrackingRepository
@@ -90,6 +90,10 @@ class TestCheckAllPricesInteractor:
         cast(Mock, tracking_repo.find_active_with_price_tracking).assert_called_once()
         cast(Mock, strategy.search).assert_called_once()
         assert cast(Mock, price_history_repo.save).call_count == 2
+        cast(Mock, tracking_repo.update).assert_called_once()
+        updated = cast(Mock, tracking_repo.update).call_args.args[0]
+        assert updated.last_checked_at is not None
+        assert updated.id == product_id
 
     def test_returns_empty_when_no_products(self) -> None:
         tracking_repo = Mock(spec=TrackingRepository)
@@ -150,6 +154,37 @@ class TestCheckAllPricesInteractor:
 
         assert len(saved) == 1
         assert cast(Mock, strategy.search).call_count == 2
+
+    def test_updates_last_checked_at_after_scan(self) -> None:
+        user_id = UUID("00000000-0000-0000-0000-000000000008")
+        product_id = UUID("00000000-0000-0000-0000-000000000009")
+        product = make_tracked_product(product_id=product_id, user_id=user_id)
+        assert product.last_checked_at is None
+
+        tracking_repo = Mock(spec=TrackingRepository)
+        cast(Mock, tracking_repo.find_active_with_price_tracking).return_value = [product]
+
+        price_history_repo = Mock(spec=PriceHistoryRepository)
+        cast(Mock, price_history_repo.save).side_effect = return_price_point
+
+        strategy = Mock(spec=SearchStrategy)
+        cast(Mock, strategy.search).return_value = [make_price_result("coupang")]
+
+        interactor = CheckAllPricesInteractor(
+            tracking_repo=cast(TrackingRepository, tracking_repo),
+            price_history_repo=cast(PriceHistoryRepository, price_history_repo),
+            strategy=cast(SearchStrategy, strategy),
+            adapters={},
+        )
+
+        interactor.execute()
+
+        cast(Mock, tracking_repo.update).assert_called_once()
+        updated_product = cast(Mock, tracking_repo.update).call_args.args[0]
+        assert updated_product.last_checked_at is not None
+        assert updated_product.updated_at > product.updated_at
+        assert updated_product.id == product_id
+        assert updated_product.source_title == product.source_title
 
     def test_uses_normalized_query_when_available(self) -> None:
         user_id = UUID("00000000-0000-0000-0000-000000000006")

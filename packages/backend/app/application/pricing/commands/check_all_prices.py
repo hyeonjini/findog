@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import logging
+from dataclasses import replace
+from datetime import UTC, datetime
 
 from app.domain.pricing.entity import PricePoint
 from app.domain.pricing.ports import PlatformAdapter, PriceHistoryRepository, SearchStrategy
@@ -52,6 +54,12 @@ class CheckAllPricesInteractor:
                     )
                     saved = self._price_history_repo.save(price_point)
                     all_saved.append(saved)
+
+                now = datetime.now(UTC)
+                updated_product = replace(
+                    product, last_checked_at=now, updated_at=now
+                )
+                self._tracking_repo.update(updated_product)
 
             except Exception:
                 logger.exception(

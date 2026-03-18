@@ -29,8 +29,12 @@ class SqlaPriceHistoryRepository(PriceHistoryRepository):
     @override
     def save(self, price_point: PricePoint) -> PricePoint:
         model = self._to_model(price_point)
-        self._session.add(model)
-        self._session.commit()
+        try:
+            self._session.add(model)
+            self._session.commit()
+        except Exception:
+            self._session.rollback()
+            raise
         self._session.refresh(model)
         return self._to_domain(model)
 
