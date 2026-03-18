@@ -1,0 +1,13 @@
+platforms:
+  stub_coupang:
+    display_name: "쿠팡 (Stub)"
+    base_url: "https://www.coupang.com"
+    search_url_template: "{base_url}/np/search?q={query}"
+    enabled: true
+    adapter_type: stub
+  stub_naver:
+    display_name: "네이버쇼핑 (Stub)"
+    base_url: "https://search.shopping.naver.com"
+    search_url_template: "{base_url}/search/all?query={query}"
+    enabled: true
+    adapter_type: stub

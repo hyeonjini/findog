@@ -1,0 +1,83 @@
+from __future__ import annotations
+
+import logging
+from dataclasses import replace
+from datetime import UTC, datetime
+
+from app.domain.pricing.entity import PricePoint
+from app.domain.pricing.ports import PlatformAdapter, PriceHistoryRepository, SearchStrategy
+from app.domain.pricing.value_objects import PriceResult
+from app.domain.tracking.repository import TrackingRepository
+
+logger = logging.getLogger(__name__)
+
+
+class CheckAllPricesInteractor:
+    _tracking_repo: TrackingRepository
+    _price_history_repo: PriceHistoryRepository
+    _strategy: SearchStrategy
+    _adapters: dict[str, PlatformAdapter]
+
+    def __init__(
+        self,
+        tracking_repo: TrackingRepository,
+        price_history_repo: PriceHistoryRepository,
+        strategy: SearchStrategy,
+        adapters: dict[str, PlatformAdapter],
+    ) -> None:
+        self._tracking_repo = tracking_repo
+        self._price_history_repo = price_history_repo
+        self._strategy = strategy
+        self._adapters = adapters
+
+    @staticmethod
+    def _pick_best_per_platform(results: list[PriceResult]) -> list[PriceResult]:
+        best: dict[str, PriceResult] = {}
+        for result in results:
+            existing = best.get(result.platform)
+            if existing is None or result.price_amount < existing.price_amount:
+                best[result.platform] = result
+        return list(best.values())
+
+    def execute(self) -> list[PricePoint]:
+        products = self._tracking_repo.find_active_with_price_tracking()
+
+        if not products:
+            logger.info("No products with price tracking enabled - skipping")
+            return []
+
+        all_saved: list[PricePoint] = []
+
+        for product in products:
+            try:
+                query = product.normalized_query or product.source_title
+                results = self._strategy.search(query, self._adapters)
+
+                # Keep only the best (lowest price) result per platform
+                best_per_platform = self._pick_best_per_platform(results)
+
+                for result in best_per_platform:
+                    price_point = PricePoint.create(
+                        tracked_product_id=product.id,
+                        platform=result.platform,
+                        price_amount=result.price_amount,
+                        currency=result.currency,
+                        product_url=result.product_url,
+                        in_stock=result.in_stock,
+                    )
+                    saved = self._price_history_repo.save(price_point)
+                    all_saved.append(saved)
+
+                now = datetime.now(UTC)
+                updated_product = replace(
+                    product, last_checked_at=now, updated_at=now
+                )
+                self._tracking_repo.update(updated_product)
+
+            except Exception:
+                logger.exception(
+                    "Failed to check prices for product %s", product.id
+                )
+                continue
+
+        return all_saved

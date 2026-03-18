@@ -86,6 +86,15 @@ class SqlaTrackedProductRepository(TrackingRepository):
         return [self._to_domain(model) for model in models]
 
     @override
+    def find_active_with_price_tracking(self) -> list[TrackedProduct]:
+        statement = select(TrackedProductTable).where(
+            TrackedProductTable.monitoring_status == "active",
+            TrackedProductTable.lowest_price_tracking_enabled == True,  # noqa: E712
+        )
+        models = self._session.exec(statement).all()
+        return [self._to_domain(model) for model in models]
+
+    @override
     def find_by_user_and_url(self, user_id: UUID, source_url: str) -> TrackedProduct | None:
         statement = select(TrackedProductTable).where(
             TrackedProductTable.user_id == user_id,
