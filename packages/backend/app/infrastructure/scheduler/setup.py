@@ -41,7 +41,7 @@ async def start_price_check_loop(
                 strategy=strategy,
                 adapters=adapters,
             )
-            saved = interactor.execute()
+            saved = await asyncio.to_thread(interactor.execute)
             logger.info(
                 "Price check cycle complete - %d price points saved", len(saved)
             )

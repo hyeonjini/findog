@@ -1,5 +1,7 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import ClassVar
+
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -9,7 +11,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     ALGORITHM: str = "HS256"
     SCHEDULER_ENABLED: bool = False
-    PRICE_CHECK_INTERVAL_MINUTES: int = 360
+    PRICE_CHECK_INTERVAL_MINUTES: int = Field(default=360, ge=1)
     PLATFORMS_CONFIG_PATH: str = "config/platforms.yaml"
 
     model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(env_file=".env")
