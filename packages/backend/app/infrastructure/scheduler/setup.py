@@ -29,8 +29,6 @@ async def start_price_check_loop(
     interval_seconds = interval_minutes * 60
 
     while True:
-        await asyncio.sleep(interval_seconds)
-
         logger.info("Price check cycle starting...")
         session = session_factory.create_session()
         try:
@@ -54,3 +52,5 @@ async def start_price_check_loop(
             logger.exception("Price check cycle failed")
         finally:
             session.close()
+
+        await asyncio.sleep(interval_seconds)

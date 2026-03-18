@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 
 from app.domain.pricing.entity import PricePoint
 from app.domain.pricing.ports import PlatformAdapter, PriceHistoryRepository, SearchStrategy
+from app.domain.pricing.value_objects import PriceResult
 from app.domain.tracking.repository import TrackingRepository
 
 logger = logging.getLogger(__name__)
@@ -29,6 +30,15 @@ class CheckAllPricesInteractor:
         self._strategy = strategy
         self._adapters = adapters
 
+    @staticmethod
+    def _pick_best_per_platform(results: list[PriceResult]) -> list[PriceResult]:
+        best: dict[str, PriceResult] = {}
+        for result in results:
+            existing = best.get(result.platform)
+            if existing is None or result.price_amount < existing.price_amount:
+                best[result.platform] = result
+        return list(best.values())
+
     def execute(self) -> list[PricePoint]:
         products = self._tracking_repo.find_active_with_price_tracking()
 
@@ -43,7 +53,10 @@ class CheckAllPricesInteractor:
                 query = product.normalized_query or product.source_title
                 results = self._strategy.search(query, self._adapters)
 
-                for result in results:
+                # Keep only the best (lowest price) result per platform
+                best_per_platform = self._pick_best_per_platform(results)
+
+                for result in best_per_platform:
                     price_point = PricePoint.create(
                         tracked_product_id=product.id,
                         platform=result.platform,

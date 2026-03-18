@@ -186,6 +186,44 @@ class TestCheckAllPricesInteractor:
         assert updated_product.id == product_id
         assert updated_product.source_title == product.source_title
 
+    def test_saves_only_best_per_platform(self) -> None:
+        user_id = UUID("00000000-0000-0000-0000-000000000010")
+        product_id = UUID("00000000-0000-0000-0000-000000000011")
+        product = make_tracked_product(product_id=product_id, user_id=user_id)
+
+        tracking_repo = Mock(spec=TrackingRepository)
+        cast(Mock, tracking_repo.find_active_with_price_tracking).return_value = [product]
+
+        price_history_repo = Mock(spec=PriceHistoryRepository)
+        cast(Mock, price_history_repo.save).side_effect = return_price_point
+
+        strategy = Mock(spec=SearchStrategy)
+        cast(Mock, strategy.search).return_value = [
+            make_price_result("coupang", "29900"),
+            make_price_result("coupang", "34900"),
+            make_price_result("coupang", "26900"),
+            make_price_result("naver", "31000"),
+            make_price_result("naver", "28000"),
+        ]
+
+        interactor = CheckAllPricesInteractor(
+            tracking_repo=cast(TrackingRepository, tracking_repo),
+            price_history_repo=cast(PriceHistoryRepository, price_history_repo),
+            strategy=cast(SearchStrategy, strategy),
+            adapters={},
+        )
+
+        saved = interactor.execute()
+
+        assert len(saved) == 2
+        assert cast(Mock, price_history_repo.save).call_count == 2
+        saved_platforms = {pp.platform for pp in saved}
+        assert saved_platforms == {"coupang", "naver"}
+        coupang_point = next(pp for pp in saved if pp.platform == "coupang")
+        naver_point = next(pp for pp in saved if pp.platform == "naver")
+        assert coupang_point.price_amount == Decimal("26900")
+        assert naver_point.price_amount == Decimal("28000")
+
     def test_uses_normalized_query_when_available(self) -> None:
         user_id = UUID("00000000-0000-0000-0000-000000000006")
         product_id = UUID("00000000-0000-0000-0000-000000000007")
