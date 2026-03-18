@@ -53,36 +53,59 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     user && typeof user.email === 'string' ? user.email : undefined;
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 flex min-h-14 flex-wrap items-center gap-y-1 border-b border-[--color-border-default] bg-[--color-surface-default] px-[--space-4]">
+    <div
+      className="flex min-h-screen flex-col"
+      style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+    >
+      <header
+        className="sticky top-0 z-10 flex min-h-14 flex-wrap items-center gap-y-1 px-[--space-4]"
+        style={{
+          backgroundColor: 'var(--color-bg-base)',
+          boxShadow: 'var(--shadow-sm)',
+        }}
+      >
         <Link
           href="/products"
-          className="text-[length:--font-size-lg] font-[number:--font-weight-bold] tracking-tight text-[--color-text-primary] hover:text-[--color-brand-500]"
+          className="flex items-center gap-1.5 text-[length:--font-size-lg] font-[number:--font-weight-bold] tracking-tight hover:opacity-80 transition-opacity"
+          style={{ color: 'var(--color-brand-500)' }}
         >
-          FinDog
+          <span>🐕</span>
+          <span>FinDog</span>
         </Link>
 
         <nav className="ml-[--space-6] flex items-center gap-3">
           <Link
             href="/products"
-            className="min-h-[32px] inline-flex items-center text-[length:--font-size-sm] hover:text-[--color-brand-500]"
+            className="min-h-[32px] inline-flex items-center text-[length:--font-size-sm] transition-colors hover:text-[--color-brand-500]"
             style={{
               color: pathname.startsWith('/products')
                 ? 'var(--color-brand-500)'
                 : 'var(--color-text-muted)',
-              fontWeight: pathname.startsWith('/products') ? 600 : 400,
+              fontWeight: pathname.startsWith('/products')
+                ? 'var(--font-weight-semibold)'
+                : 'var(--font-weight-normal)',
+              borderBottom: pathname.startsWith('/products')
+                ? '2px solid var(--color-brand-500)'
+                : '2px solid transparent',
+              paddingBottom: '2px',
             }}
           >
             Products
           </Link>
           <Link
             href="/profile"
-            className="min-h-[32px] inline-flex items-center text-[length:--font-size-sm] hover:text-[--color-brand-500]"
+            className="min-h-[32px] inline-flex items-center text-[length:--font-size-sm] transition-colors hover:text-[--color-brand-500]"
             style={{
               color: pathname.startsWith('/profile')
                 ? 'var(--color-brand-500)'
                 : 'var(--color-text-muted)',
-              fontWeight: pathname.startsWith('/profile') ? 600 : 400,
+              fontWeight: pathname.startsWith('/profile')
+                ? 'var(--font-weight-semibold)'
+                : 'var(--font-weight-normal)',
+              borderBottom: pathname.startsWith('/profile')
+                ? '2px solid var(--color-brand-500)'
+                : '2px solid transparent',
+              paddingBottom: '2px',
             }}
           >
             Profile
@@ -93,7 +116,14 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
           {email && (
             <span
               data-testid="dashboard-user-email"
-              className="hidden text-[length:--font-size-sm] text-[--color-text-muted] sm:inline"
+              className="hidden text-[length:--font-size-sm] sm:inline"
+              style={{
+                color: 'var(--color-text-secondary)',
+                backgroundColor: 'var(--color-grey-100)',
+                borderRadius: 'var(--radius-full)',
+                padding: '4px 10px',
+                fontSize: 'var(--font-size-sm)',
+              }}
             >
               {email}
             </span>
@@ -110,7 +140,9 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       </header>
 
       <main className="flex-1 px-[--space-4] py-[--space-6]">
-        {children}
+        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+          {children}
+        </div>
       </main>
     </div>
   );
