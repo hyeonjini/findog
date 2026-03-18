@@ -1,0 +1,10 @@
+{
+  "name": "findog",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "check": "bash scripts/check.sh",
+    "bootstrap": "bash scripts/bootstrap.sh"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@findog/api-client",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./endpoints": "./src/endpoints.ts",
+    "./schemas": "./src/schemas.ts",
+    "./msw": "./src/msw.ts"
+  },
+  "scripts": {
+    "generate": "orval --config ./orval.config.ts"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.6",
+    "axios": "^1.12.2",
+    "msw": "^2.11.1",
+    "react": "^19.2.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.3.0",
+    "@types/node": "^25.5.0",
+    "orval": "^8.1.0",
+    "typescript": "^5.9.2"
+  }
+}

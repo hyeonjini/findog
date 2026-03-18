@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+@import '../../design-system/tokens/colors.css';
+@import '../../design-system/tokens/spacing.css';
+@import '../../design-system/tokens/typography.css';
+
+@layer base {
+  body {
+    @apply min-h-screen bg-slate-50 text-slate-900 antialiased px-4 py-6;
+  }
+
+  h1 {
+    @apply text-2xl font-semibold leading-tight tracking-tight;
+  }
+}

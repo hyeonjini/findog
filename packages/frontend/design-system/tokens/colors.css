@@ -1,0 +1,19 @@
+:root {
+  --color-brand-500: #2563eb;
+  --color-surface-default: #ffffff;
+  --color-text-primary: #111827;
+  --color-text-muted: #6b7280;
+  --color-border-default: #e5e7eb;
+  --color-brand-600: #1d4ed8;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-success-500: #22c55e;
+  --color-surface-hover: #f3f4f6;
+
+  /* Warning */
+  --color-warning-500: #f59e0b;
+
+  /* Status badge surfaces */
+  --color-surface-success: #dcfce7;
+  --color-surface-warning: #fef9c3;
+}

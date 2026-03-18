@@ -1,0 +1,4 @@
+packages:
+  - packages/frontend
+  - packages/chrome-extension
+  - packages/api-client
