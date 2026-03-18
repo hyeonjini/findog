@@ -76,17 +76,23 @@ export function ProductCard({
     <Card
       data-testid="product-card"
       className={cn(
-        'transition-shadow hover:shadow-md',
+        'transition-shadow duration-150 hover:shadow-md',
         onClick && 'cursor-pointer',
         className,
       )}
+      style={{
+        borderRadius: 'var(--radius-lg)',
+      }}
       onClick={onClick}
       onKeyDown={onClick ? handleKeyDown : undefined}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
     >
       <CardContent className="flex gap-[--space-3] p-[--space-3]">
-        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-[--color-surface-hover]">
+        <div
+          className="relative h-24 w-24 shrink-0 overflow-hidden bg-[--color-surface-hover]"
+          style={{ borderRadius: 'var(--radius-md)' }}
+        >
           {product.source_image_url && !imgError ? (
             <img
               src={product.source_image_url}
@@ -128,16 +134,20 @@ export function ProductCard({
             </div>
 
             <div className="flex items-center justify-between gap-[--space-2]">
-              <span className="text-[length:--font-size-base] font-[number:--font-weight-bold] text-[--color-text-primary]">
+              <span
+                className="text-[length:--font-size-base] font-[number:--font-weight-bold]"
+                style={{ color: 'var(--color-brand-500)' }}
+              >
                 {price}
               </span>
 
               <span
                 className={cn(
-                  'inline-flex items-center gap-[--space-1] rounded-full px-[--space-2] py-0.5 text-[length:--font-size-sm]',
+                  'inline-flex items-center gap-[--space-1] px-[--space-2] py-0.5 text-[length:--font-size-sm]',
                   status.surface,
                   status.text,
                 )}
+                style={{ borderRadius: 'var(--radius-full)' }}
               >
                 <span
                   className={cn(

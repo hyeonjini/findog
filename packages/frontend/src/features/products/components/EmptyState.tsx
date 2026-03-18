@@ -11,39 +11,42 @@ export function EmptyState({ onCreateClick, className }: EmptyStateProps) {
     <div
       data-testid="empty-state"
       className={cn(
-        'flex flex-col items-center justify-center py-[--space-12] text-center',
+        'flex flex-col items-center justify-center py-20 text-center',
         className,
       )}
     >
-      <div className="mb-[--space-6] rounded-full bg-[--color-surface-hover] p-[--space-6]">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-12 w-12 text-[--color-text-muted]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={1.5}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-          />
-        </svg>
+      <div
+        className="mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+        style={{ backgroundColor: 'var(--color-brand-50)', fontSize: '2rem' }}
+      >
+        📦
       </div>
 
-      <h3 className="text-[length:--font-size-lg] font-[number:--font-weight-bold] text-[--color-text-primary]">
-        No tracked products yet
+      <h3
+        className="mb-2"
+        style={{
+          fontSize: 'var(--font-size-lg)',
+          fontWeight: 'var(--font-weight-semibold)',
+          color: 'var(--color-text-primary)',
+        }}
+      >
+        추적 중인 상품이 없어요
       </h3>
 
-      <p className="mt-[--space-2] max-w-sm text-[length:--font-size-sm] leading-[--line-height-normal] text-[--color-text-muted]">
-        Save products from any shopping page using the FinDog browser extension.
-        We&apos;ll track prices and availability for you.
+      <p
+        className="mb-6 max-w-xs"
+        style={{
+          fontSize: 'var(--font-size-sm)',
+          color: 'var(--color-text-muted)',
+          lineHeight: 'var(--line-height-normal)',
+        }}
+      >
+        관심 있는 상품을 추가하면 가격 변동과 최저가를 추적해드려요.
       </p>
 
       {onCreateClick && (
-        <Button onClick={onCreateClick} className="mt-[--space-4]">
-          Add your first product
+        <Button onClick={onCreateClick}>
+          + 첫 번째 상품 추가하기
         </Button>
       )}
     </div>
