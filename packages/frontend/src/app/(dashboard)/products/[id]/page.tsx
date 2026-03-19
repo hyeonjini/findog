@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 
 import type { TrackedProductResponse } from '@findog/api-client/endpoints/index.schemas';
 
+import type { PriceHistoryListResponse } from '@/features/products/types/price-history';
 import { serverApiFetch, ServerApiError } from '@/lib/api/server';
 
 export const dynamic = 'force-dynamic';
@@ -26,13 +27,26 @@ async function getTrackedProduct(id: string) {
   }
 }
 
+async function getPriceHistory(productId: string): Promise<PriceHistoryListResponse> {
+  try {
+    return await serverApiFetch<PriceHistoryListResponse>(
+      `/api/tracked-products/${productId}/price-history`,
+    );
+  } catch {
+    return { items: [], total: 0 };
+  }
+}
+
 export default async function ProductDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = await getTrackedProduct(id);
+  const [product, priceHistory] = await Promise.all([
+    getTrackedProduct(id),
+    getPriceHistory(id),
+  ]);
 
   return (
     <div data-testid="product-detail-page">
@@ -59,7 +73,7 @@ export default async function ProductDetailPage({
         </Link>
       </nav>
 
-      <ProductDetailClient product={product} />
+      <ProductDetailClient product={product} priceHistory={priceHistory.items} />
     </div>
   );
 }
