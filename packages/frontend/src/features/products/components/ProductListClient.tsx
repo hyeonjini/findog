@@ -43,7 +43,7 @@ export function ProductListClient({ items }: ProductListClientProps) {
               marginTop: '4px',
             }}
           >
-            {items.length}개의 상품을 추적 중
+            {items.length}개의 상품
           </p>
         </div>
         <Button onClick={() => setCreateOpen(true)}>+ 상품 추가</Button>

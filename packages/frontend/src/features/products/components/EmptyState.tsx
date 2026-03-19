@@ -41,7 +41,7 @@ export function EmptyState({ onCreateClick, className }: EmptyStateProps) {
           lineHeight: 'var(--line-height-normal)',
         }}
       >
-        관심 있는 상품을 추가하면 가격 변동과 최저가를 추적해드려요.
+        관심 있는 상품을 추가하고 한곳에서 관리하세요.
       </p>
 
       {onCreateClick && (
