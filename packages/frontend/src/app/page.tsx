@@ -19,8 +19,8 @@ const FEATURES = [
   },
   {
     icon: '🔔',
-    title: '재입고 알림',
-    description: '품절된 상품이 재입고되면 이메일로 즉시 알려드립니다.',
+    title: '재입고 모니터링',
+    description: '품절된 상품의 재입고 여부를 주기적으로 확인하고 상태를 추적합니다.',
   },
 ] as const;
 
