@@ -25,17 +25,34 @@ export function ProductListClient({ items }: ProductListClientProps) {
   const router = useRouter();
   return (
     <>
-      <div className="mb-[--space-6] flex items-center justify-between gap-[--space-3]">
-        <h1 className="text-[length:--font-size-lg] font-[number:--font-weight-bold] text-[--color-text-primary]">
-          Tracked Products
-        </h1>
-        <Button onClick={() => setCreateOpen(true)}>Add Product</Button>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1
+            style={{
+              fontSize: 'var(--font-size-2xl)',
+              fontWeight: 'var(--font-weight-bold)',
+              color: 'var(--color-text-primary)',
+            }}
+          >
+            내 상품 목록
+          </h1>
+          <p
+            style={{
+              fontSize: 'var(--font-size-sm)',
+              color: 'var(--color-text-muted)',
+              marginTop: '4px',
+            }}
+          >
+            {items.length}개의 상품을 추적 중
+          </p>
+        </div>
+        <Button onClick={() => setCreateOpen(true)}>+ 상품 추가</Button>
       </div>
 
       {items.length === 0 ? (
         <EmptyState onCreateClick={() => setCreateOpen(true)} />
       ) : (
-        <div className="grid gap-[--space-3] sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((product) => (
             <ProductCard
               key={product.id}
