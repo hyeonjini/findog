@@ -41,6 +41,16 @@ export default function ProductDetailLoading() {
         </div>
       </div>
 
+      <div
+        className="rounded-lg border border-[--color-border-default] bg-[--color-surface-default] p-[--space-4]"
+      >
+        <div className="mb-[--space-3] flex items-center justify-between">
+          <div className="h-5 w-20 rounded bg-[--color-surface-hover]" />
+          <div className="h-3 w-28 rounded bg-[--color-surface-hover]" />
+        </div>
+        <div className="h-[280px] w-full rounded-lg bg-[--color-surface-hover]" />
+      </div>
+
       <div className="mt-[--space-6] flex gap-[--space-2]">
         <div className="h-9 w-16 rounded-md bg-[--color-surface-hover]" />
         <div className="h-9 w-20 rounded-md bg-[--color-surface-hover]" />

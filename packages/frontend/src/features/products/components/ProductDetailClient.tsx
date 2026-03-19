@@ -9,15 +9,18 @@ import {
 import { Button, useToast } from '@findog/design-system';
 import { parseApiError } from '@/lib/utils/parse-api-error';
 
+import type { PriceHistoryResponse } from '../types/price-history';
 import { ArchiveConfirmDialog } from './ArchiveConfirmDialog';
+import { PriceHistorySection } from './PriceHistorySection';
 import { ProductDetail, type ProductDetailProps } from './ProductDetail';
 import { ProductUpdateModal } from './ProductUpdateModal';
 
 type ProductDetailClientProps = {
   product: ProductDetailProps['product'];
+  priceHistory: PriceHistoryResponse[];
 };
 
-export function ProductDetailClient({ product }: ProductDetailClientProps) {
+export function ProductDetailClient({ product, priceHistory }: ProductDetailClientProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [editOpen, setEditOpen] = useState(false);
@@ -83,6 +86,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           {refreshMutation.isPending ? 'Refreshing...' : 'Refresh'}
         </Button>
       </div>
+
+      <PriceHistorySection data={priceHistory} />
 
       <ProductUpdateModal
         open={editOpen}
