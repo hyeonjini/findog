@@ -14,8 +14,8 @@ const FEATURES = [
   },
   {
     icon: '🔍',
-    title: '최저가 검색',
-    description: '국내 주요 쇼핑몰에서 동일 상품의 최저가를 한눈에 비교하세요.',
+    title: '가격 비교',
+    description: '다양한 플랫폼의 가격 정보를 수집하고 비교할 수 있는 기반을 제공합니다.',
   },
   {
     icon: '🔔',
